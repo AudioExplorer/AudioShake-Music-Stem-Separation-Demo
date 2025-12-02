@@ -4,13 +4,15 @@ const state = {
     assets: [],
     selectedAsset: null,
     alignments: [],
+    taskPayload: null,
     selectedAlignment: null,
     currentMedia: null,
     theme: localStorage.getItem('theme') || 'light',
     displaySidebar: true,
     selectedAlignmentJSON: null,
     editingSelectedAlignment: false,
-    isDemo: false
+    isDemo: false,
+    completedTask: {}
 };
 
 // DOM Elements
@@ -52,6 +54,8 @@ const elements = {
     audioPlayer: document.getElementById('audioPlayer'),
     lyricsContainer: document.getElementById('lyricsContainer'),
     createAlignmentBtn: document.getElementById('createAlignmentBtn'),
+    // tasks
+    createSeparationTaskBtn: document.getElementById('createSeparationTaskBtn'),
 
     // Alignments
     alignmentsSection: document.getElementById('alignmentsSection'),
@@ -192,6 +196,12 @@ function setupEventListeners() {
     // Player
     elements.createAlignmentBtn.addEventListener('click', createAlignment);
     elements.refreshAlignments.addEventListener('click', loadAlignments);
+
+    //task
+    // elements.createSeparationTaskBtn.addEventListener('click', createSeparationTask);
+
+    elements.createSeparationTaskBtn.addEventListener('click', renderTest); // testing players
+
 
     // Alignments accordion
     elements.alignmentsHeader.addEventListener('click', toggleAlignmentsAccordion);
@@ -345,6 +355,7 @@ function clearDebugOutput() {
     elements.debugOutput.innerHTML = '';
 }
 
+
 // API Methods
 async function executeAPIMethod(method) {
     if (!api.hasAPIKey()) {
@@ -361,7 +372,15 @@ async function executeAPIMethod(method) {
                     showToast('Please select an asset first');
                     return;
                 }
-                result = await api.createAlignmentTask(state.selectedAsset.src);
+                // result = await api.createAlignmentTask(state.selectedAsset.src);
+                result = await api.createTask(state.selectedAsset.src, [
+                    // {
+                    //     model: 'alignment',
+                    //     formats,
+                    //     language: "us"
+                    // }
+                ]);
+
                 addDebugEntry(result, 'success');
                 showToast('Task created successfully');
                 break;
@@ -520,9 +539,22 @@ function getFormatLabel(format) {
     return '📎 File';
 }
 
+function createWave(elementID = 'audioPlayer') {
+    const wave = WaveSurfer.create({
+        container: '#wave',
+        backend: 'MediaElement',   // <-- critical
+        mediaControls: false,
+        media: document.getElementById(elementID),
+        waveColor: '#999',
+        progressColor: '#f00',
+    });
+}
 function selectAsset(index) {
+
+
     clearAlignments()
     state.selectedAsset = state.assets[index];
+    createWave('audioPlayer')
     // todo update the alignment filter to be fuzzy 
     elements.filterSource.value = state.selectedAsset.title.split(".")[0]
 
@@ -532,13 +564,14 @@ function selectAsset(index) {
 
     loadMedia(state.selectedAsset);
     elements.playerSection.style.display = 'block';
-    if (!isVideo) {
+    if (!state.isDemo) {
         loadAlignments();
     }
 
 }
 
 async function loadMedia(asset) {
+
     const isVideo = asset.format.includes('video');
 
     if (isVideo) {
@@ -562,6 +595,98 @@ async function loadMedia(asset) {
         renderLyrics(data);
     }
 }
+
+// tasks
+
+function renderTest() {
+    console.log("render test")
+    completedTask = {
+        "id": "cmioaj0tw000fc5c7esbbt3ap",
+        "createdAt": "2025-12-02T08:02:44.085Z",
+        "updatedAt": "2025-12-02T08:02:44.085Z",
+        "clientId": "cmfwwqtsu0mbs3u96rqylxjj5",
+        "targets": [
+            {
+                "id": "cmioaj0tw000gc5c7mf73dvls",
+                "createdAt": "2025-12-02T08:02:44.085Z",
+                "updatedAt": "2025-12-02T08:02:53.575Z",
+                "url": "https://demos.spatial-explorer.com/demo-assets/Jazz-sequence.mp4",
+                "model": "vocals",
+                "taskId": "cmioaj0tw000fc5c7esbbt3ap",
+                "status": "completed",
+                "formats": [
+                    "mp3"
+                ],
+                "output": [
+                    {
+                        "name": "vocals_high_quality",
+                        "format": "mp3",
+                        "type": "audio/mpeg",
+                        "link": "https://d1fr0j5lr1ap87.cloudfront.net/prod/regular/output/cmfwwqtsu0mbs3u96rqylxjj5/cmioaj0tw000fc5c7esbbt3ap/targets/cmioaj0tw000gc5c7mf73dvls/output/vocals_high_quality.mp3?Expires=1764702037&Key-Pair-Id=K32ZZ0L6PLWPIJ&Signature=HpYq52d5ZdxOY45eDKGzLs6r6dkcnuw0VZZnnN2F6hkSSwduaYkLnlzaOMA5-cGS6dHa-J3g5kbVuemKkXN92bA2vncufM9CncBufXCpLt-qC91LoDcsm0QINOVzmb3RmaAqoLFss6tzfg8Ual~7LD842QWDHaW91uruT1ss-ttUVrw8f2M2PnisoOf6mH42vztwnRX-rsQXKHJ-z26vghNFPm1NLd0Mb5BtmZZPSnSdWLneHkGXkL1HWwzjFL5vii0i7woVvB4uHpXApokxfKuyVKVpkZhH~q~vNcOx7a2WwEA-BjPHvpo167qdORW5MV3JG1YPyBhEpgiei5ZEZA__"
+                    },
+                    {
+                        "name": "vocals_residual_high_quality",
+                        "format": "mp3",
+                        "type": "audio/mpeg",
+                        "link": "https://d1fr0j5lr1ap87.cloudfront.net/prod/regular/output/cmfwwqtsu0mbs3u96rqylxjj5/cmioaj0tw000fc5c7esbbt3ap/targets/cmioaj0tw000gc5c7mf73dvls/output/vocals_high_quality.mp3?Expires=1764702037&Key-Pair-Id=K32ZZ0L6PLWPIJ&Signature=HpYq52d5ZdxOY45eDKGzLs6r6dkcnuw0VZZnnN2F6hkSSwduaYkLnlzaOMA5-cGS6dHa-J3g5kbVuemKkXN92bA2vncufM9CncBufXCpLt-qC91LoDcsm0QINOVzmb3RmaAqoLFss6tzfg8Ual~7LD842QWDHaW91uruT1ss-ttUVrw8f2M2PnisoOf6mH42vztwnRX-rsQXKHJ-z26vghNFPm1NLd0Mb5BtmZZPSnSdWLneHkGXkL1HWwzjFL5vii0i7woVvB4uHpXApokxfKuyVKVpkZhH~q~vNcOx7a2WwEA-BjPHvpo167qdORW5MV3JG1YPyBhEpgiei5ZEZA__"
+                    }
+                ],
+                "cost": 1.5,
+                "error": null,
+                "duration": 29.037006378173828,
+                "variant": "high_quality",
+                "residual": true,
+                "language": "en"
+            }
+        ]
+    };
+
+
+    state.completedTask = completedTask;
+    loadStems(completedTask)
+}
+
+
+async function createSeparationTask() {
+    if (!api.hasAPIKey()) {
+        await openModal('auth');
+        return;
+    }
+    console.log(state.taskPayload)
+
+    if (!state.taskPayload) {
+        showToast('Please build a task payload first');
+        return;
+    }
+
+    try {
+        showToast('Creating alignment task...');
+        const task = await api.createSepTask(state.taskPayload);
+        // const task = await api.createAlignmentTask(state.selectedAsset.src);
+        addDebugEntry(task, 'success');
+
+        showToast('Processing... This may take a few minutes');
+        const completedTask = await api.pollTask(task.id, (update) => {
+            addDebugEntry(update, 'info');
+        });
+
+        showToast('Alignment completed!');
+
+        loadStems(completedTask);
+
+        // const alignmentTarget = completedTask.targets?.find(t => t.model === 'alignment');
+        // if (alignmentTarget?.output?.length > 0) {
+        //     const alignmentOutput = alignmentTarget.output.find(o => o.format === 'json');
+        //     if (alignmentOutput?.link) {
+        //         loadAlignmentData(alignmentOutput.link);
+        //     }
+        // }
+    } catch (err) {
+        showToast(`Error: ${err.message}`);  // ✅ Correct
+        addDebugEntry({ error: err.message }, 'error');
+    }
+}
+
 
 // Alignments
 async function createAlignment() {

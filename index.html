@@ -92,8 +92,12 @@
                 <div class="card-body">
                     <!-- Into.md loaded -->
                     <div id="intro"></div>
+                    <div id="wave"></div>
                 </div>
             </section>
+
+
+
             <!-- Asset Loader -->
             <section class="card">
                 <div class="card-header">
@@ -146,6 +150,8 @@
 
             </section>
 
+
+
             <!-- Assets Grid -->
             <section class="card" id="assetsSection" style="display: none;">
                 <div class="card-header">
@@ -156,13 +162,84 @@
                     <div id="assetsGrid" class="assets-grid"></div>
                 </div>
             </section>
+            <!-- Model Section -->
+            <section class="card" id="modelSelectionSection">
+                <div class="card-header">
+                    <h2>Task Builder</h2>
+                    <div class="player-controls">
+                        <button id="createSeparationTaskBtn" class="btn-primary">Create Separation Task</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tools-left">
+                        <!-- <div class="container"> -->
 
+                        <!-- LEFT: Available models -->
+                        <div class="panel">
+                            <h3>Available Models</h3>
+                            <ul id="availableList" class="model-list"></ul>
+                        </div>
+
+                        <!-- RIGHT: Selected task list -->
+                        <div class="panel">
+                            <h3>Selected Models </h3>
+                            <ul id="taskList" class="task-list">
+                                <p style="text-align: center;">Drag and drop model here.</p>
+                            </ul>
+                            <p>
+                                Include Residual
+                                <input type="checkbox" id="inputResidual" name="residual" value="residual" checked>
+                            <div class="formats-container">
+                                <p>Output Format:</p>
+                                <label><input type="checkbox" name="format" value="wav"> .wav</label>
+                                <label><input type="checkbox" name="format" value="mp3" checked> .mp3</label>
+                                <label><input type="checkbox" name="format" value="mov"> .mov</label>
+                                <label><input type="checkbox" name="format" value="mp4"> .mp4</label>
+                            </div>
+                            </p>
+                            <div class="language-container">
+                                <p>Optional Language:</p>
+                                <input id="languageInput" type="text" placeholder="en">
+                            </div>
+                        </div>
+
+                        <!-- </div> -->
+
+
+
+
+                        <div class="output-container">
+                            <h3>Task Payload Preview</h3>
+                            <pre id="modelPreviewOutput"></pre>
+                        </div>
+                    </div>
+                    <div class="tools-left">
+                        <div class="stems-placeholder">
+                            Stems will appear here when processing is complete.
+                        </div>
+                        <div id="stem-controls" class="stem-mixer-header">
+                            <div style="display: flex; flex-direction: column;">
+                                <button id="playAllBtn" class="btn-primary" hidden style="margin-bottom: 10px;">Play
+                                    All</button>
+                                <button id="refreshStemsBtn" class="btn-primary" hidden style="margin-bottom: 10px;">
+                                    Refresh Stems</button>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+            </section>
             <!-- Media Player -->
             <section class="card" id="playerSection" style="display: none;">
                 <div class="card-header">
                     <h2>Align Media</h2>
                     <div class="player-controls">
-                        <button id="createAlignmentBtn" class="btn-primary">Create Alignment</button>
+                        <button id="createAlignmentBtn" class="btn-primary">Create Task</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -179,8 +256,8 @@
                             </div>
 
 
-                            <div class="lyrics-container" id="lyricsContainer">
 
+                            <div class="lyrics-container" id="lyricsContainer">
                                 <div class="lyrics-placeholder">
                                     Select an alignment or create a new one to view synced lyrics
                                 </div>
@@ -282,9 +359,17 @@
     <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/showdown-prettify/dist/showdown-prettify.min.js"></script>
 
+    <script src="https://unpkg.com/wavesurfer.js"></script>
+
+
+
+
+
     <script src="api.js"></script>
     <script src="code.js"></script>
     <script src="app.js"></script>
+    <script src="modelSelector.js"></script>
+    <script src="stemplayer.js"></script>
 </body>
 
 </html>

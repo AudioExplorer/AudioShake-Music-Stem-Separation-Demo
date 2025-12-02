@@ -1,0 +1,54 @@
+[
+    {
+        "name": "Instrumental",
+        "model": "instrumental",
+        "description": "Generates an instrumental-only version by removing vocals. For best quality, use the high_quality variant.",
+        "variant": "high_quality"
+    },
+    {
+        "name": "Drums",
+        "model": "drums",
+        "description": "Isolates percussion and rhythmic elements."
+    },
+    {
+        "name": "Vocals",
+        "model": "vocals",
+        "description": "Extracts vocal elements from a mix. Supports the high_quality variant for improved clarity.",
+        "variant": "high_quality"
+    },
+    {
+        "name": "Bass",
+        "model": "bass",
+        "description": "Separates bass instruments and low-frequency sounds."
+    },
+    {
+        "name": "Guitar",
+        "model": "guitar",
+        "description": "Isolates guitar stems (acoustic, electric, classical)."
+    },
+    {
+        "name": "Piano",
+        "model": "piano",
+        "description": "Extracts piano or keyboard instruments."
+    },
+    {
+        "name": "Strings",
+        "model": "strings",
+        "description": "Isolates orchestral string instruments like violin, cello, and viola."
+    },
+    {
+        "name": "Wind",
+        "model": "wind",
+        "description": "Extracts wind instruments such as flute and saxophone."
+    },
+    {
+        "name": "Other",
+        "model": "other",
+        "description": "Captures remaining instrumentation after main stems are removed."
+    },
+    {
+        "name": "Other-x-Guitar",
+        "model": "other-x-guitar",
+        "description": "Residual instrumentation after removing vocals, drums, bass, and guitar."
+    }
+]

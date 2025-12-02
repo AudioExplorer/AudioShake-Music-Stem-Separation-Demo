@@ -171,6 +171,8 @@ class AudioShakeAPI {
         });
     }
 
+
+
     // Create Alignment Task (helper method)
     async createAlignmentTask(url, formats = ['json'], language = 'en') {
         return await this.createTask(url, [
@@ -181,6 +183,13 @@ class AudioShakeAPI {
             }
         ]);
     }
+
+    // Create Alignment Task (helper method)
+    async createSepTask(task) {
+        //createTask(url, targets, callbackUrl = null)
+        return await this.createTask(task.url, task.targets);
+    }
+
 
     // Get Task by ID
     async getTask(taskId) {

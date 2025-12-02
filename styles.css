@@ -155,7 +155,7 @@ body {
 
 .tools-left {
     display: flex;
-    align-items: center;
+    align-items: top;
     gap: calc(var(--spacing) * 1.5);
 }
 
@@ -1024,4 +1024,90 @@ blockquote p {
 /* Tighten the first paragraph after label */
 blockquote p:first-child {
     margin-top: 0;
+}
+
+/* drag and drop model selection */
+
+.container {
+    display: flex;
+    gap: 40px;
+}
+
+.panel {
+    width: 260px;
+}
+
+.model-list,
+.task-list {
+    list-style: none;
+    padding: 0;
+    min-height: 300px;
+    border: 1px dashed #666;
+    padding: 10px;
+}
+
+.item {
+    background: #6466f1;
+    color: #fff;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    cursor: grab;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item.dragging {
+    opacity: 0.4;
+}
+
+.remove-btn {
+    font-size: 14px;
+    cursor: pointer;
+    color: #fff;
+    padding-left: 10px;
+}
+
+/* stems */
+
+.stems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    grid-gap: 20px;
+    margin-top: 1rem;
+}
+
+.stem-card {
+    background: #6466f1;
+    border: 1px solid #b3b4f5;
+    padding: 16px;
+    border-radius: 8px;
+    color: #fff;
+}
+
+.stem-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.stem-buttons {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.stem-buttons button {
+    padding: 4px 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.wave-container {
+    height: 90px;
+    margin-top: 8px;
+}
+
+.toast {
+    white-space: pre-line;
 }
