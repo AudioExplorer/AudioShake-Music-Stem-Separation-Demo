@@ -1,15 +1,15 @@
-# AudioShake Alignment Demo
+# AudioShake Music Separation Demo
 
-A modern, browser-based application for testing the AudioShake Lyrics Alignment API. Create time-aligned lyrics and visualize word-level synchronization with audio/video playback.
+A modern, browser-based application for testing the AudioShake Tasks API. Create source separations from a single mixed track.
 
-[Live Demo](https://audioexplorer.github.io/AudioShake-Alignment-Demo/)
+[Live Demo](https://audioexplorer.github.io/AudioShake-Music-Stem-Separation-Demo/)
 
 ## Features
 
-- **API Integration**: Full AudioShake Tasks API support with secure key storage
+- **API Integration**: Full Tasks API support with secure key storage
 - **Asset Management**: Load demo assets via file upload, URL, or built-in demos
-- **Real-time Alignment**: Create alignment tasks and poll for completion
-- **Synced Playback**: Word-level lyric highlighting synchronized to media
+- **Real-time Separation Tasks**: Create source speparation tasks and poll for completion
+- **Synced Stem Playback**: Multiple stems synchronized playback
 - **API Console**: Live debugging with request/response inspection
 - **Code Examples**: View API usage in JavaScript, cURL, and Python
 - **Modern UI**: Clean, responsive design with dark mode support
@@ -24,8 +24,8 @@ A modern, browser-based application for testing the AudioShake Lyrics Alignment 
    - Upload your own `demo-assets.json` file
    - Or enter a URL to your assets JSON
 4. **Select Media**: Click any asset to load it in the player
-5. **Create Alignment**: Click "Create Alignment" to process the selected media
-6. **View Results**: Watch synchronized lyrics highlight as the media plays
+5. **Create Taks**: Use the Task Builder to process the selected media with various models.
+6. **View Results**: Watch synchronized playback of all stems as the media plays
 
 ## File Structure
 
@@ -36,6 +36,7 @@ audioshake-alignment-demo/
 ├── app.js           # Application logic and UI management
 ├── api.js           # AudioShake API client
 ├── code.js          # Live Code Examples
+├── stemplayer.js    # Sync Stems player
 └── README.md        # This file
 ```
 
@@ -91,7 +92,7 @@ Headers: { 'x-api-key': 'YOUR_API_KEY' }
 
 Tasks return a targets array.
 Each target has:
-- `model`: The processing model (e.g., 'alignment')
+- `model`: The processing model (e.g., 'Instrumental')
 - `status`: 'processing', 'completed', or 'failed'
 - `output`: Array of output files with `link`, `format`, `type`
 - `cost`: Credits used for processing
@@ -106,9 +107,9 @@ Each target has:
 
 ### Media Player
 - Video and audio playback support
-- Word-level lyric synchronization
 - Click-to-seek functionality
-- Automatic scroll-to-active word
+- Automatic stems sync
+- Download individual stems
 
 ### API Console
 - Real-time request/response logging
@@ -184,7 +185,7 @@ No build process required. Simply edit files and refresh your browser.
 - Verify media is playing
 
 ## Resources
-- [Live Demo](https://audioexplorer.github.io/Audioshake-Alignment-Demo/)
+- [Live Demo](https://audioexplorer.github.io/AudioShake-Music-Stem-Separation-Demo/)
 - [AudioShake API Documentation](https://docs.audioshake.ai)
 - [Create Demo Assets Tool](https://www.npmjs.com/package/create-demo-assets)
 - [AudioShake Dashboard](https://dashboard.audioshake.ai)
