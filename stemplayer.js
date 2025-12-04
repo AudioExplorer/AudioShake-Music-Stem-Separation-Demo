@@ -20,12 +20,24 @@ async function refreshStems() {
         result = await api.getTask(taskId);
         addDebugEntry(result, 'success');
         console.log(result);
-        // toto update completedTask
         loadStems(result);
     }
 }
 
 async function loadStems(completedTask) {
+
+    // reveal the UI for the stems
+    // reveal the UI for the stems
+    document.getElementById("stem-controls").style.display = 'flex';
+
+
+
+    // Clean up any existing WaveSurfer instances
+    stemPlayers.forEach(item => {
+        if (item.wavesurfer) {
+            item.wavesurfer.destroy();
+        }
+    });
 
     // note add this to real api
     const expiry = getTaskExpiryInfo(completedTask)
@@ -38,29 +50,34 @@ async function loadStems(completedTask) {
     if (expiry.expiryMessage == 'Expired') {
         container.textContent = "Stems have expired Refresh";
         document.getElementById("refreshStemsBtn").classList.remove('hidden');
-
         document.getElementById("playAllBtn").classList.remove('hidden');
 
         return;
     }
 
-    const outputs = completedTask?.targets?.[0]?.output;
+    const outputs = completedTask?.targets?.flatMap(target => target.output);
+
     if (!Array.isArray(outputs) || outputs.length === 0) {
         container.textContent = "No stems found.";
         return;
     }
+
+    // reveal the UI for the stems
+    // reveal the UI for the stems
+    document.getElementById("stem-controls").style.display = 'flex';
+
+
 
     if (!audioContext) audioContext = new AudioContext();
     stemPlayers = []; // reset
 
     // DAW-style vertical track stack
     const trackStack = document.createElement("div");
-    trackStack.style.display = "flex";
-    trackStack.style.flexDirection = "column";
-    trackStack.style.gap = "12px";
+    trackStack.style.display = "block";
     trackStack.style.width = "100%";
+    trackStack.style.maxWidth = "1200px";
+    trackStack.style.margin = "0 auto";
     trackStack.style.padding = "14px";
-    trackStack.style.alignItems = "center";
     container.appendChild(trackStack);
 
     for (const stem of outputs) {
@@ -74,28 +91,40 @@ async function loadStems(completedTask) {
             .map(word => word.charAt(0).toUpperCase() + word.slice(1))  // capitalize first letter of each word
             .join(' ');              // join back to a single string
 
-        const url = stem.link;
+
+
+        //    proxy for CORS issues
+        // if (window.location.host == "localhost") {
+        //     const url = `http://localhost:3000/proxy?url=${encodeURIComponent(stem.link)}`;
+        // } else {
+        //     const url = stem.link
+        // }
+
+        const url = stem.link
+
+
+
+
 
         // === DAW-STYLE TRACK ROW ===
         const track = document.createElement("div");
-        track.style.display = "flex";
-        track.style.alignItems = "center";
+        track.style.display = "grid";
+        track.style.gridTemplateColumns = "220px 1fr";
+        track.style.gap = "12px";
+        track.style.width = "100%";
         track.style.background = "#f6f6f6ff";
         track.style.color = "#6466f1";
         track.style.padding = "12px";
         track.style.borderRadius = "12px";
         track.style.boxShadow = "0 2px 6px rgba(0,0,0,0.35)";
-
         track.style.border = "2px solid #6466f1";
         track.style.minHeight = "80px";
-        track.style.gap = "12px";
+        track.style.marginBottom = "12px";
+        track.style.boxSizing = "border-box";
 
         // LEFT SIDE: Track Controls
         const leftControls = document.createElement("div");
-        leftControls.style.display = "flex";
-        leftControls.style.flexDirection = "column";
-        leftControls.style.gap = "6px";
-        leftControls.style.minWidth = "200px";
+        track.style.alignItems = "center";
 
         const title = document.createElement("div");
         title.textContent = label;
@@ -126,7 +155,7 @@ async function loadStems(completedTask) {
         soloBtn.style.cursor = "pointer";
 
         const downloadBtn = document.createElement("a");
-        downloadBtn.href = url;
+        downloadBtn.href = stem.link;
         downloadBtn.download = stemName + ".mp3";
         downloadBtn.textContent = "↓";
         downloadBtn.style.width = "36px";
@@ -175,9 +204,8 @@ async function loadStems(completedTask) {
 
         // RIGHT SIDE: Waveform area (audio element)
         const waveformArea = document.createElement("div");
-        waveformArea.style.flex = "1";
-        waveformArea.style.display = "flex";
-        waveformArea.style.alignItems = "center";
+        waveformArea.style.display = "block";
+        waveformArea.style.width = "100%";
         waveformArea.style.background = "#6466f1";
         waveformArea.style.borderRadius = "4px";
         waveformArea.style.padding = "8px";
@@ -187,9 +215,8 @@ async function loadStems(completedTask) {
         const audio = document.createElement("audio");
         audio.controls = false;
         audio.src = url;
-        audio.preload = "metadata"; // Load metadata to enable captureStream
+        audio.preload = "metadata";
         audio.style.width = "100%";
-        // Note: Not setting crossOrigin to avoid CORS issues with signed URLs
 
         // Waveform container with canvas
         const waveformContainer = document.createElement("div");
@@ -238,16 +265,24 @@ async function loadStems(completedTask) {
             canvas,
             playhead,
             waveformContainer,
+            waveformArea,
+            track,
             muteBtn,
             soloBtn,
         };
 
         stemPlayers.push(item);
 
-        // Draw waveform once when metadata loads
+        // Draw waveform when audio metadata loads
         audio.addEventListener('loadedmetadata', () => {
-            drawStaticWaveformFromAudio(audio, canvas, stemName);
-        }, { once: true });
+            // Try WaveSurfer first, fallback to placeholder if it fails
+            try {
+                drawWaveSurferWaveform(waveformContainer, url, audio, item);
+            } catch (error) {
+                console.error('WaveSurfer failed, using placeholder:', error);
+                drawPlaceholderWaveform(canvas.getContext('2d'), canvas.width, canvas.height, stemName);
+            }
+        });
 
         // ========== VOLUME SLIDER ==========
         volumeSlider.oninput = () => {
@@ -364,96 +399,81 @@ function pauseAllStems() {
 }
 
 // =====================================================
-// STATIC WAVEFORM VISUALIZATION
+// WAVEFORM VISUALIZATION
 // =====================================================
-async function drawStaticWaveformFromAudio(audio, canvas, stemName) {
-    const ctx = canvas.getContext('2d');
-    const width = canvas.width;
-    const height = canvas.height;
 
+// WaveSurfer-based waveform (preferred)
+function drawWaveSurferWaveform(container, url, audioElement, item) {
+    if (typeof WaveSurfer === 'undefined') {
+        throw new Error('WaveSurfer not loaded');
+    }
+
+    console.log('Creating WaveSurfer for:', item.name);
+    console.log('URL:', url);
+
+    // Clear the container (remove canvas and playhead)
+    container.innerHTML = '';
+
+    // Simple fixed sizing - parent is 100% width already
+    container.style.cssText = `
+        width: 100%;
+        height: 60px;
+        position: relative;
+        cursor: pointer;
+        background: #6466f1;
+        border-radius: 2px;
+    `;
+
+    // Create WaveSurfer instance
+    const wavesurfer = WaveSurfer.create({
+        container: container,
+        waveColor: 'rgba(255, 255, 255, 0.5)', // White semi-transparent for visibility
+        progressColor: 'rgba(255, 255, 255, 0.9)', // Brighter white for progress
+        height: 60,
+        barWidth: 2,
+        barGap: 1,
+        barRadius: 2,
+        url: url,
+        normalize: true, // Normalize waveform peaks
+        // Use existing audio element for playback control
+        media: audioElement,
+        // Disable WaveSurfer's built-in interactions since we control playback
+        interact: false,
+    });
+
+    // Store wavesurfer instance for cleanup
+    item.wavesurfer = wavesurfer;
+
+    // Add event listeners to debug waveform loading
+    wavesurfer.on('load', (url) => {
+        console.log('WaveSurfer loading:', item.name, url);
+    });
+
+    wavesurfer.on('ready', () => {
+        console.log('WaveSurfer ready:', item.name);
+        console.log('Container width after ready:', container.offsetWidth);
+    });
+
+    wavesurfer.on('error', (error) => {
+        console.error('WaveSurfer error for', item.name, ':', error);
+    });
+
+    wavesurfer.on('decode', () => {
+        console.log('WaveSurfer decoded:', item.name);
+    });
+
+    // WaveSurfer already syncs with the media element automatically
+    // No need to manually call seekTo() on timeupdate - that causes jitter
+
+    return wavesurfer;
+}
+
+// Placeholder waveform (fallback)
+function drawPlaceholderWaveform(ctx, width, height, stemName) {
     // Clear canvas
     ctx.fillStyle = '#0a0a0a';
     ctx.fillRect(0, 0, width, height);
 
-    // Create a TEMPORARY AudioContext just for waveform analysis
-    // This won't interfere with playback since we close it immediately
-    try {
-        const tempAudioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-        // Create a temporary audio element to load and analyze the audio
-        const tempAudio = new Audio(audio.src);
-        tempAudio.crossOrigin = "anonymous"; // Try to enable CORS
-
-        // Wait for it to load
-        await new Promise((resolve, reject) => {
-            tempAudio.addEventListener('canplay', resolve, { once: true });
-            tempAudio.addEventListener('error', reject, { once: true });
-        });
-
-        // Create source and analyser
-        const source = tempAudioContext.createMediaElementSource(tempAudio);
-        const analyser = tempAudioContext.createAnalyser();
-        analyser.fftSize = 4096;
-
-        source.connect(analyser);
-        analyser.connect(tempAudioContext.destination);
-
-        // Sample the audio
-        const samplePoints = Math.min(width, 300);
-        const duration = tempAudio.duration;
-        const waveformData = [];
-
-        for (let i = 0; i < samplePoints; i++) {
-            const time = (i / samplePoints) * duration;
-            tempAudio.currentTime = time;
-
-            await new Promise(resolve => setTimeout(resolve, 20));
-
-            const dataArray = new Uint8Array(analyser.frequencyBinCount);
-            analyser.getByteFrequencyData(dataArray);
-
-            let sum = 0;
-            for (let j = 0; j < dataArray.length; j++) {
-                sum += dataArray[j];
-            }
-            waveformData.push(sum / dataArray.length);
-        }
-
-        // Clean up
-        tempAudio.pause();
-        source.disconnect();
-        tempAudioContext.close();
-
-        // Draw the waveform
-        drawWaveformFromData(ctx, waveformData, width, height);
-
-    } catch (error) {
-        console.log('Could not create real waveform, using placeholder:', error.message);
-        // Fallback to placeholder
-        drawPlaceholderWaveform(ctx, width, height, stemName);
-    }
-}
-
-function drawWaveformFromData(ctx, data, width, height) {
-    const centerY = height / 2;
-    ctx.fillStyle = '#4080ff';
-
-    const barWidth = width / data.length;
-
-    for (let i = 0; i < data.length; i++) {
-        // Normalize to 0-1 range
-        const normalized = data[i] / 255;
-
-        // Calculate bar height
-        const barHeight = normalized * centerY * 1.5;
-        const x = i * barWidth;
-        const y = centerY - barHeight / 2;
-
-        ctx.fillRect(x, y, Math.max(1, barWidth), Math.max(2, barHeight));
-    }
-}
-
-function drawPlaceholderWaveform(ctx, width, height, stemName) {
     // Create a realistic audio waveform pattern using random variations
     // Different seed for each stem name
     const seed = stemName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);

@@ -1,5 +1,7 @@
 // V17
 // Application State
+
+
 const state = {
     assets: [],
     selectedAsset: null,
@@ -197,9 +199,10 @@ function setupEventListeners() {
     elements.createAlignmentBtn.addEventListener('click', createAlignment);
     elements.refreshAlignments.addEventListener('click', loadAlignments);
 
-    //task
+    // Run Task
     // elements.createSeparationTaskBtn.addEventListener('click', createSeparationTask);
 
+    //debug
     elements.createSeparationTaskBtn.addEventListener('click', renderTest); // testing players
 
 
@@ -601,47 +604,143 @@ async function loadMedia(asset) {
 function renderTest() {
     console.log("render test")
     completedTask = {
-        "id": "cmioaj0tw000fc5c7esbbt3ap",
-        "createdAt": "2025-12-02T08:02:44.085Z",
-        "updatedAt": "2025-12-02T08:02:44.085Z",
+        "id": "cmip9mj55000v10zgtvsbr48a",
+        "createdAt": "2025-12-03T00:25:14.345Z",
+        "updatedAt": "2025-12-03T00:25:14.345Z",
         "clientId": "cmfwwqtsu0mbs3u96rqylxjj5",
         "targets": [
             {
-                "id": "cmioaj0tw000gc5c7mf73dvls",
-                "createdAt": "2025-12-02T08:02:44.085Z",
-                "updatedAt": "2025-12-02T08:02:53.575Z",
-                "url": "https://demos.spatial-explorer.com/demo-assets/Jazz-sequence.mp4",
-                "model": "vocals",
-                "taskId": "cmioaj0tw000fc5c7esbbt3ap",
+                "id": "cmip9mj55000x10zg2fxma8eo",
+                "createdAt": "2025-12-03T00:25:14.345Z",
+                "updatedAt": "2025-12-03T00:25:34.376Z",
+                "url": "https://demos.spatial-explorer.com/demo-assets/Audiio_Drakeford_The_Venture_Stronger_Than_One.wav",
+                "model": "bass",
+                "taskId": "cmip9mj55000v10zgtvsbr48a",
                 "status": "completed",
                 "formats": [
                     "mp3"
                 ],
                 "output": [
                     {
-                        "name": "vocals_high_quality",
+                        "name": "bass",
                         "format": "mp3",
                         "type": "audio/mpeg",
-                        "link": "https://d1fr0j5lr1ap87.cloudfront.net/prod/regular/output/cmfwwqtsu0mbs3u96rqylxjj5/cmioaj0tw000fc5c7esbbt3ap/targets/cmioaj0tw000gc5c7mf73dvls/output/vocals_high_quality.mp3?Expires=1764702037&Key-Pair-Id=K32ZZ0L6PLWPIJ&Signature=HpYq52d5ZdxOY45eDKGzLs6r6dkcnuw0VZZnnN2F6hkSSwduaYkLnlzaOMA5-cGS6dHa-J3g5kbVuemKkXN92bA2vncufM9CncBufXCpLt-qC91LoDcsm0QINOVzmb3RmaAqoLFss6tzfg8Ual~7LD842QWDHaW91uruT1ss-ttUVrw8f2M2PnisoOf6mH42vztwnRX-rsQXKHJ-z26vghNFPm1NLd0Mb5BtmZZPSnSdWLneHkGXkL1HWwzjFL5vii0i7woVvB4uHpXApokxfKuyVKVpkZhH~q~vNcOx7a2WwEA-BjPHvpo167qdORW5MV3JG1YPyBhEpgiei5ZEZA__"
+                        "link": "https://d1fr0j5lr1ap87.cloudfront.net/prod/regular/output/cmfwwqtsu0mbs3u96rqylxjj5/cmip9mj55000v10zgtvsbr48a/targets/cmip9mj55000x10zg2fxma8eo/output/bass.mp3?Expires=1764725288&Key-Pair-Id=K32ZZ0L6PLWPIJ&Signature=R5g2WS7VxyZSDEqxlOvt2VY46pJl0St2IDUsK9hJTy6~l0nv-ymWEhkLLwvZX8LtxTAeY9hL1yMc5WUmi5kwHoTTGNLgoxT6q6BfsyLb3wkh5RyLrcM9KOdFwqXLm-EtItmSQdVA~5ZG~Sxg1mk01PlEerl21oiiowYuSyPUutVaa-SPQTUmCZwmMqOpiNbx7Fdodx0kp6599SoZHxJWI4pk5-n2dmHQ9Qwm-3XeStLhaf8~ZYx2U1TJLjXk7F5mzpXeAzwcqE6aYRNhAYIBGve-M9q8ECkA4ek~eKsL7bzq0dBZyE~5tJlheR3vlwPfkCIFeu2V7ywvOeQQOc6cHg__"
                     },
+                    {
+                        "name": "bass_residual",
+                        "format": "mp3",
+                        "type": "audio/mpeg",
+                        "link": "https://d1fr0j5lr1ap87.cloudfront.net/prod/regular/output/cmfwwqtsu0mbs3u96rqylxjj5/cmip9mj55000v10zgtvsbr48a/targets/cmip9mj55000x10zg2fxma8eo/output/bass_residual.mp3?Expires=1764725288&Key-Pair-Id=K32ZZ0L6PLWPIJ&Signature=ITD1H2kZ4wGZqjd6LxxQd4NfJTEGTzXLTalxmhM8XxwnOnGv5p-XcsltzX1dcNxkOod1kp-3uRiBTXgywTxD5HLC2GhLDeBEfoePaowv1MB1SWWBVAcpwMihLP4-14ZRFHyxX~M9nlYqcrk9ZnsB~XNKqxtn72w5bGkC7HGdBEhN2u8xaDk34fvFxCI7VEpvCK~mAebbtXq4D-EWzY-vzyxx40KgKE1p28CIJWXas6wM0YCfAeCjTtIVFNvtHXfhRZu83o7unAAOnXlcYYoS1SU---LN2XNBhdVSQkDNQMX52jPmbPWXKwCzlmc8Q9AUDnhDydsbgh6bh9PZD5VmUA__"
+                    }
+                ],
+                "cost": 3,
+                "error": null,
+                "duration": 172.78915405273438,
+                "variant": null,
+                "residual": true,
+                "language": "en"
+            },
+            {
+                "id": "cmip9mj55000w10zg9dm0919u",
+                "createdAt": "2025-12-03T00:25:14.345Z",
+                "updatedAt": "2025-12-03T00:25:34.376Z",
+                "url": "https://demos.spatial-explorer.com/demo-assets/Audiio_Drakeford_The_Venture_Stronger_Than_One.wav",
+                "model": "vocals",
+                "taskId": "cmip9mj55000v10zgtvsbr48a",
+                "status": "completed",
+                "formats": [
+                    "mp3"
+                ],
+                "output": [
                     {
                         "name": "vocals_residual_high_quality",
                         "format": "mp3",
                         "type": "audio/mpeg",
-                        "link": "https://d1fr0j5lr1ap87.cloudfront.net/prod/regular/output/cmfwwqtsu0mbs3u96rqylxjj5/cmioaj0tw000fc5c7esbbt3ap/targets/cmioaj0tw000gc5c7mf73dvls/output/vocals_high_quality.mp3?Expires=1764702037&Key-Pair-Id=K32ZZ0L6PLWPIJ&Signature=HpYq52d5ZdxOY45eDKGzLs6r6dkcnuw0VZZnnN2F6hkSSwduaYkLnlzaOMA5-cGS6dHa-J3g5kbVuemKkXN92bA2vncufM9CncBufXCpLt-qC91LoDcsm0QINOVzmb3RmaAqoLFss6tzfg8Ual~7LD842QWDHaW91uruT1ss-ttUVrw8f2M2PnisoOf6mH42vztwnRX-rsQXKHJ-z26vghNFPm1NLd0Mb5BtmZZPSnSdWLneHkGXkL1HWwzjFL5vii0i7woVvB4uHpXApokxfKuyVKVpkZhH~q~vNcOx7a2WwEA-BjPHvpo167qdORW5MV3JG1YPyBhEpgiei5ZEZA__"
+                        "link": "https://d1fr0j5lr1ap87.cloudfront.net/prod/regular/output/cmfwwqtsu0mbs3u96rqylxjj5/cmip9mj55000v10zgtvsbr48a/targets/cmip9mj55000w10zg9dm0919u/output/vocals_residual_high_quality.mp3?Expires=1764725288&Key-Pair-Id=K32ZZ0L6PLWPIJ&Signature=RqF~gDKB4AIt-Yt5~lCMtQegT0ja53qdFx5Vbuz7UL4YpP8oYD0GNla44djSKRgsaCo06SnVUCT9fgGl~cts9y43kseHwvfjHaF0rI7yabjGRzXxMDnpW5xev~tEn0Dek-dIUZQ7dFuhUpUL-UlLi8v0~piheYt4fEfVUG2w1SeqKWMX5Sx2FkmVSxLCVimG2mmNMocEx9HJ92WTEvJew9ckwROnrDwSzQKIAzzT9lDzD3Oy1h1y6VPgiCUypgq6eluJqUobX2rBMRreWngYDBjKYUrDmuYc6JDN0eeO-cGqll43TVqA6V94x3wwLBsJKZfjtloKf8H0I37sepVHYQ__"
+                    },
+                    {
+                        "name": "vocals_high_quality",
+                        "format": "mp3",
+                        "type": "audio/mpeg",
+                        "link": "https://d1fr0j5lr1ap87.cloudfront.net/prod/regular/output/cmfwwqtsu0mbs3u96rqylxjj5/cmip9mj55000v10zgtvsbr48a/targets/cmip9mj55000w10zg9dm0919u/output/vocals_high_quality.mp3?Expires=1764725288&Key-Pair-Id=K32ZZ0L6PLWPIJ&Signature=C3OQqP-jrjndxBtajVJMe1XoUrXkxrRQEf0~jvE0S3MHcGbsEGTeYF3ftaSvIEZt2EpCh-4EeQsj1rwJ4AQKNnObvr~Wjx-o2JO8WrMhQGJ80Ws7iczwfDWn3gAgwV7KJcnSQ6qeeKhUIArHjtkkM1s0G4rQwUhp7sA~945A0lCvJGBTjPGNabooxfmdQrop8rEnbQB0txCcbecfYzJrm9K-RAooPJksQh2MFES6cFxkNgziIgpao1RlOb-gONiSLIst4po1l7JNk7wd6JLC~Ndqk0-zvWNcDF0SQSph2PN7nm7Ur37Txccf577yKVI1a3PxeUKUOej412HjEMGoyg__"
                     }
                 ],
-                "cost": 1.5,
+                "cost": 4.5,
                 "error": null,
-                "duration": 29.037006378173828,
+                "duration": 172.78915405273438,
                 "variant": "high_quality",
+                "residual": true,
+                "language": "en"
+            },
+            {
+                "id": "cmip9mj55000y10zgygt786vp",
+                "createdAt": "2025-12-03T00:25:14.345Z",
+                "updatedAt": "2025-12-03T00:25:52.517Z",
+                "url": "https://demos.spatial-explorer.com/demo-assets/Audiio_Drakeford_The_Venture_Stronger_Than_One.wav",
+                "model": "guitar",
+                "taskId": "cmip9mj55000v10zgtvsbr48a",
+                "status": "completed",
+                "formats": [
+                    "mp3"
+                ],
+                "output": [
+                    {
+                        "name": "guitar",
+                        "format": "mp3",
+                        "type": "audio/mpeg",
+                        "link": "https://d1fr0j5lr1ap87.cloudfront.net/prod/regular/output/cmfwwqtsu0mbs3u96rqylxjj5/cmip9mj55000v10zgtvsbr48a/targets/cmip9mj55000y10zgygt786vp/output/guitar.mp3?Expires=1764725288&Key-Pair-Id=K32ZZ0L6PLWPIJ&Signature=M4eqbAtkGH664VBlKozk4OwzL9FUlrCEnZQZ4dlaWty1xd7vKpeXXzOXFnzQsHK3sVPN~exDI783wT9JM1AhXhGe6ZCAskY5YCEEODTgUtoeuG9WYUlDhD19dZjr1~c3kPzPhKrFYstagasUtXTqf5OzjR9xmUaV1pMU4YUlXrNk4RGS83DN7kJXwYAx8BkucwpyYvM5d5tNOByCaYfedAmJ0TMuX0~HrogHPVKCnz7d3Dv3LGc6MZSHLKr--Ef~~VBbCL2k3n-9xjAhqyO~9tdej-u2DGgWNtg9ppoaOrP6RHbGz5SjPdbb0je~CHXPbcPTjgd71LjiLOLj12LDNw__"
+                    },
+                    {
+                        "name": "guitar_residual",
+                        "format": "mp3",
+                        "type": "audio/mpeg",
+                        "link": "https://d1fr0j5lr1ap87.cloudfront.net/prod/regular/output/cmfwwqtsu0mbs3u96rqylxjj5/cmip9mj55000v10zgtvsbr48a/targets/cmip9mj55000y10zgygt786vp/output/guitar_residual.mp3?Expires=1764725288&Key-Pair-Id=K32ZZ0L6PLWPIJ&Signature=NWXtsMEccczOicjmJxY1ZW50jpTWY9qD1aH4Wz7YMArM-7xvhZi9RzqKWBRPYH3n3ZWGz9DxUIyXvElP5QgaVgDMkC08IfEXW4cADPW0J1w-O4dQYCSsRQg2~U0T~lU1dl3bx9hCaUVV7dGlrD6Nj561LTegeJ0UzKVGj8U8rH51mrZtjnWopdK7VVJUs8CHgIJYPT5i~D0Ze0nXArvYt~0TWHgLY~w-vOg~~4b~lh8YnU9-W0x-414w5Ps1v-AMQoOhgIwDfyxPKxGlhAIHota~HnpX~TpggDLysxUP9dhuLYI2wAcoc64aHNf6r4UU0~zW0C0uvaEBHUPCoaeP7g__"
+                    }
+                ],
+                "cost": 3,
+                "error": null,
+                "duration": 172.78915405273438,
+                "variant": null,
+                "residual": true,
+                "language": "en"
+            },
+            {
+                "id": "cmip9mj55000z10zgxyl93640",
+                "createdAt": "2025-12-03T00:25:14.345Z",
+                "updatedAt": "2025-12-03T00:25:31.677Z",
+                "url": "https://demos.spatial-explorer.com/demo-assets/Audiio_Drakeford_The_Venture_Stronger_Than_One.wav",
+                "model": "drums",
+                "taskId": "cmip9mj55000v10zgtvsbr48a",
+                "status": "completed",
+                "formats": [
+                    "mp3"
+                ],
+                "output": [
+                    {
+                        "name": "drums",
+                        "format": "mp3",
+                        "type": "audio/mpeg",
+                        "link": "https://d1fr0j5lr1ap87.cloudfront.net/prod/regular/output/cmfwwqtsu0mbs3u96rqylxjj5/cmip9mj55000v10zgtvsbr48a/targets/cmip9mj55000z10zgxyl93640/output/drums.mp3?Expires=1764725288&Key-Pair-Id=K32ZZ0L6PLWPIJ&Signature=JiwC1HXB1s0n30iKTl7u~OagXuP2RO16WdXKIOm~a3QVh0h2nYplVEjDcLYq9M9fgA0UnUJ17q4zqKomfD8XIxIsAff4AZWSL31SsmQFltfjiv1~w8pTP4Xmo2iv6gvgxTd0HrVEspp3aCA7LxEHs9vOxu8KhjbOwZ5TdRXG0J0TURQhBl2ZLmeiENCQlVRgUPttZ9uP7OCVugEen2XfPBAY0feI8ZXJpUVzeqgvhXRitLocTIxhgps~58Xz4AC--R0Ugr5vZrzumt~a7U1ug5fcys99e9xWVsffpcXqv39PE5cfvfp8dUY3Ds~U9B-t6vMWl8YeDA1I5oaExiTZMg__"
+                    },
+                    {
+                        "name": "drums_residual",
+                        "format": "mp3",
+                        "type": "audio/mpeg",
+                        "link": "https://d1fr0j5lr1ap87.cloudfront.net/prod/regular/output/cmfwwqtsu0mbs3u96rqylxjj5/cmip9mj55000v10zgtvsbr48a/targets/cmip9mj55000z10zgxyl93640/output/drums_residual.mp3?Expires=1764725288&Key-Pair-Id=K32ZZ0L6PLWPIJ&Signature=caDK~q-RlI3rzKuq9cK0YQRnU13~pQSVx2CZwDkRnFRgIjBxCnaV97Vo531XWtyTg00m9L1UpG507nwyMdd3N7bWbBsfwGiv9w0Eocyk7tZV09fQX1DaDQ2Qz0fHuTpW~fMUXcaSREoDq43CND~qLHfojsZswlwSZ2C803Shq7a7PDNH6VcP2jqHSRVjPE0zA~Yg2lIHEE4ZlN2tab8stMMIky~2P67lF5tpnjI5xyAx2zM5nIwXFLFB6ytAaeC5523RUJgEMUOeCF2Joj~QoKhqX-djQtl2zvo~dQK4U3Wo2~a-sXhmTwAhRV~fKugn-1c42eDLIiQePlz4jd8RUg__"
+                    }
+                ],
+                "cost": 3,
+                "error": null,
+                "duration": 172.78915405273438,
+                "variant": null,
                 "residual": true,
                 "language": "en"
             }
         ]
     };
 
-
+    console.log(completedTask.targets.length)
     state.completedTask = completedTask;
     loadStems(completedTask)
 }
@@ -660,7 +759,7 @@ async function createSeparationTask() {
     }
 
     try {
-        showToast('Creating alignment task...');
+        showToast('Creating Separation task...');
         const task = await api.createSepTask(state.taskPayload);
         // const task = await api.createAlignmentTask(state.selectedAsset.src);
         addDebugEntry(task, 'success');
@@ -670,7 +769,7 @@ async function createSeparationTask() {
             addDebugEntry(update, 'info');
         });
 
-        showToast('Alignment completed!');
+        showToast('Separation completed!');
 
         loadStems(completedTask);
 

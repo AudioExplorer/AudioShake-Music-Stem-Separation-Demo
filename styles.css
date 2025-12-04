@@ -204,7 +204,8 @@ body {
 }
 
 .sidebar.hidden {
-    transform: translateX(-100%);
+    /* need to check this */
+    transform: translateX(-200%);
     position: absolute;
     height: 100%;
 }
@@ -1110,4 +1111,21 @@ blockquote p:first-child {
 
 .toast {
     white-space: pre-line;
+}
+
+.stems-placeholder {
+    min-width: 90%;
+}
+
+#stem-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: calc(var(--spacing) * 1.5);
+    padding-left: 1em;
+}
+
+.stem-placeholder>p {
+    display: flex;
+    background-color: #10b981;
 }

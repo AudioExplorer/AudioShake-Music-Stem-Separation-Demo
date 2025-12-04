@@ -126,6 +126,66 @@ class AudioShakeAPI {
             headers: {
                 'x-api-key': this.apiKey,
                 'Content-Type': 'application/json',
+                'Access-Control-Request-Headers': 'Authorization, Content-Type',
+                ...options.headers
+            }
+        };
+
+        try {
+            const response = await fetch(url, config);
+
+            // Handle non-JSON responses
+            const contentType = response.headers.get('content-type');
+            let data;
+
+            if (contentType && contentType.includes('application/json')) {
+                data = await response.json();
+            } else {
+                const text = await response.text();
+                data = { message: text, status: response.status };
+            }
+
+            // Check for HTTP error status codes (4xx and 5xx)
+            if (!response.ok && typeof data !== 'object' || data === null) {
+                throw new Error(`API Error: ${data}`);
+            } else if (!response.ok && response.status >= 400 && response.status < 600) {
+                let errorMessage = '';
+                // check for common errors and set the error message accordingly
+                switch (response.status) {
+                    case 401:
+                        errorMessage = 'Unauthorized: Missing or incorrect API key';
+                        break;
+                    case 403:
+                        errorMessage = 'Forbidden: Access is denied for this request';
+                        break;
+                    default:
+                        errorMessage = `HTTP Error: ${response.status}`;
+                }
+                throw new Error(errorMessage);
+            }
+
+            return data;
+        } catch (err) {
+            if (err instanceof TypeError && err.message.includes('Failed to fetch')) {
+                throw new Error('Network error. Please check your connection.');
+            }
+            throw err;
+        }
+    }
+
+    // original 
+    async requestOLD(endpoint, options = {}) {
+        if (!this.apiKey) {
+            throw new Error('API key not set. Please authorize first.');
+        }
+
+        const url = `${this.baseURL}${endpoint}`;
+        const config = {
+            ...options,
+            headers: {
+                'x-api-key': this.apiKey,
+                'Content-Type': 'application/json',
+                'Access-Control-Request-Headers': 'Authorization, Content-Type',
                 ...options.headers
             }
         };
@@ -186,6 +246,8 @@ class AudioShakeAPI {
 
     // Create Alignment Task (helper method)
     async createSepTask(task) {
+        console.log("total targets", task.targets.length)
+
         //createTask(url, targets, callbackUrl = null)
         return await this.createTask(task.url, task.targets);
     }

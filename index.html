@@ -92,7 +92,12 @@
                 <div class="card-body">
                     <!-- Into.md loaded -->
                     <div id="intro"></div>
-                    <div id="wave"></div>
+
+                    <div id="waveform">
+                        <!-- the waveform will be rendered here -->
+                    </div>
+
+
                 </div>
             </section>
 
@@ -205,28 +210,23 @@
 
                         <!-- </div> -->
 
-
-
-
                         <div class="output-container">
                             <h3>Task Payload Preview</h3>
                             <pre id="modelPreviewOutput"></pre>
                         </div>
                     </div>
                     <div class="tools-left">
-                        <div class="stems-placeholder">
-                            Stems will appear here when processing is complete.
-                        </div>
-                        <div id="stem-controls" class="stem-mixer-header">
-                            <div style="display: flex; flex-direction: column;">
+                        <div id="stem-controls" class="stem-mixer-header" style="display: none;">
+                            <div style="display: flex; flex-direction: column; text-align: center;">
                                 <button id="playAllBtn" class="btn-primary" hidden style="margin-bottom: 10px;">Play
                                     All</button>
                                 <button id="refreshStemsBtn" class="btn-primary" hidden style="margin-bottom: 10px;">
                                     Refresh Stems</button>
                             </div>
-
                         </div>
-
+                        <!-- stems placeholder -->
+                        <div class="stems-placeholder">
+                        </div>
 
 
                     </div>
@@ -247,6 +247,8 @@
                         <div class="media-wrapper">
                             <video id="mediaPlayer" controls></video>
                             <audio id="audioPlayer" controls></audio>
+                            <!-- WaveSurfer container for asset player -->
+                            <div id="wave" style="width: 100%;"></div>
                         </div>
                         <div class="media-wrapper">
 
@@ -359,10 +361,8 @@
     <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/showdown-prettify/dist/showdown-prettify.min.js"></script>
 
-    <script src="https://unpkg.com/wavesurfer.js"></script>
-
-
-
+    <!-- waveform images -->
+    <script src="https://unpkg.com/wavesurfer.js@7"></script>
 
 
     <script src="api.js"></script>
@@ -370,6 +370,8 @@
     <script src="app.js"></script>
     <script src="modelSelector.js"></script>
     <script src="stemplayer.js"></script>
+    <script src="easter-egg.js"></script>
+
 </body>
 
 </html>

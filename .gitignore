@@ -8,3 +8,6 @@ demo-assets-config.json
 dev-plan-vanila.md
 progress.md
 Claude.md
+server.mjs
+code-summary.md
+./assets/*

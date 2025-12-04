@@ -55,18 +55,7 @@ const modelData = [
         "description": "Residual instrumentation after removing vocals, drums, bass, and guitar."
     }
 ];
-// [
-//     { name: "Instrumental", model: "instrumental" },
-//     { name: "Drums", model: "drums" },
-//     { name: "Vocals", model: "vocals" },
-//     { name: "Bass", model: "bass" },
-//     { name: "Guitar", model: "guitar" },
-//     { name: "Piano", model: "piano" },
-//     { name: "Strings", model: "strings" },
-//     { name: "Wind", model: "wind" },
-//     { name: "Other", model: "other" },
-//     { name: "Other-x-Guitar", model: "other-x-guitar" }
-// ];
+
 
 const availableList = document.getElementById("availableList");
 const taskList = document.getElementById("taskList");
@@ -95,7 +84,6 @@ function createItem(model, label) {
 // DRAG EVENTS (LEFT → RIGHT)
 // ---------------------------
 let draggedItem = null;
-
 
 
 
@@ -198,7 +186,7 @@ function updateTaskPayload() {
     const formats = [...document.querySelectorAll('input[name="format"]:checked')].map(f => f.value);
 
     let variant = undefined;
-    let residual = true;
+    // let residual = true;
 
     const language = (document.getElementById("languageInput").value != "" || document.getElementById("languageInput").length > 2) ? document.getElementById("languageInput").value : "en"
 
@@ -209,13 +197,18 @@ function updateTaskPayload() {
     }
 
     const isResidual = document.getElementById("inputResidual").checked;
-    const targets = [...taskList.children].map((li) => {
-        let model = li.dataset.model
+
+    const targets = [...taskList.children].map((target) => {
+
+        let model = target.dataset.model
+
         let obj = {
-            model: li.dataset.model,
+            model: model,
             formats: formats,
             language: language
-        }
+        };
+
+
         if (model == "instrumental" || model == "vocals") {
             variant = "high_quality"
             obj.variant = variant
@@ -225,11 +218,11 @@ function updateTaskPayload() {
             obj.residual = true
         }
 
-        return obj
+        return (obj != undefined) ? obj : undefined
+    });
 
-
-    }
-    );
+    // remove first ele <p> message
+    targets.shift()
 
     let task = {
         url: url,
@@ -237,6 +230,7 @@ function updateTaskPayload() {
     }
 
     // update the Payload state
+
     state.taskPayload = task;
 
     debugEl.textContent = JSON.stringify(
@@ -300,4 +294,4 @@ function getTaskExpiryInfo(completedTask) {
     };
 }
 
-updateTaskPayload();
+// updateTaskPayload();
