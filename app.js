@@ -200,10 +200,10 @@ function setupEventListeners() {
     elements.refreshAlignments.addEventListener('click', loadAlignments);
 
     // Run Task
-    // elements.createSeparationTaskBtn.addEventListener('click', createSeparationTask);
+    elements.createSeparationTaskBtn.addEventListener('click', createSeparationTask);
 
     //debug
-    elements.createSeparationTaskBtn.addEventListener('click', renderTest); // testing players
+    // elements.createSeparationTaskBtn.addEventListener('click', renderTest); // testing players
 
 
     // Alignments accordion
