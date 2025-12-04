@@ -603,6 +603,7 @@ async function loadMedia(asset) {
 
 function renderTest() {
     console.log("render test")
+    // note this is a demo task and is not a real task and must be updated before running in debug mode. 
     completedTask = {
         "id": "cmip9mj55000v10zgtvsbr48a",
         "createdAt": "2025-12-03T00:25:14.345Z",
@@ -761,7 +762,6 @@ async function createSeparationTask() {
     try {
         showToast('Creating Separation task...');
         const task = await api.createSepTask(state.taskPayload);
-        // const task = await api.createAlignmentTask(state.selectedAsset.src);
         addDebugEntry(task, 'success');
 
         showToast('Processing... This may take a few minutes');
@@ -773,13 +773,6 @@ async function createSeparationTask() {
 
         loadStems(completedTask);
 
-        // const alignmentTarget = completedTask.targets?.find(t => t.model === 'alignment');
-        // if (alignmentTarget?.output?.length > 0) {
-        //     const alignmentOutput = alignmentTarget.output.find(o => o.format === 'json');
-        //     if (alignmentOutput?.link) {
-        //         loadAlignmentData(alignmentOutput.link);
-        //     }
-        // }
     } catch (err) {
         showToast(`Error: ${err.message}`);  // ✅ Correct
         addDebugEntry({ error: err.message }, 'error');
