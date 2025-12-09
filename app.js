@@ -25,7 +25,9 @@ const elements = {
     consoleToggle: document.getElementById('consoleToggle'),
     caseStudyBtn: document.getElementById('caseStudyBtn'),
     faqBtn: document.getElementById('faqBtn'),
+    tutorialBtn: document.getElementById('tutorialBtn'),
     faqContent: document.getElementById('faqContent'),
+    tutorialContent: document.getElementById('tutorialContent'),
 
     // Sidebar
     sidebar: document.getElementById('sidebar'),
@@ -79,6 +81,7 @@ const elements = {
     // Modals
     authModal: document.getElementById('authModal'),
     faqModal: document.getElementById('faqModal'),
+    tutorialModal: document.getElementById('tutorialModal'),
     caseStudyModal: document.getElementById('caseStudyModal'),
     apiKeyInput: document.getElementById('apiKeyInput'),
     saveApiKey: document.getElementById('saveApiKey'),
@@ -232,6 +235,8 @@ function setupEventListeners() {
     elements.copyCodeBtn.addEventListener('click', copyCode);
     //faqBtn
     elements.faqBtn.addEventListener('click', async () => await openModal('faq'));
+
+    elements.tutorialBtn.addEventListener('click', async () => await openModal('tutorial'));
 
     document.querySelectorAll('.modal-close').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -1212,7 +1217,6 @@ async function openModal(type) {
         elements.apiKeyInput.focus();
     } else if (type === 'code') {
         elements.codeModal.classList.add('active');
-        updateCodeExample('javascript');
     } else if (type === 'faq') {
         elements.faqModal.classList.add('active');
         const response = await fetch("./faq.md");   // load file
@@ -1254,7 +1258,42 @@ async function openModal(type) {
         stripEmptyTextNodes(wrapper);
 
         elements.faqContent.innerHTML = wrapper.innerHTML;
+    } else if (type === 'tutorial') {
+        elements.tutorialModal.classList.add('active');
+        const response = await fetch("./docs/tutorial.md");   // load file
+        const markdown = await response.text();       // read raw MD
+        showdown.extension('targetBlank', function () {
+            return [{
+                type: 'output',
+                regex: /<a\s+href="([^"]*)"/g,
+                replace: '<a href="$1" target="_blank" rel="noopener noreferrer"'
+            }];
+        });
+
+        const converter = new showdown.Converter({
+            extensions: ['targetBlank'],
+            rawHeaderId: true,
+            simpleLineBreaks: true,
+            parseInlineHTML: true,
+            literalMidWordUnderscores: true,
+            backslashEscapesHTMLTags: true,
+
+            // THIS IS THE IMPORTANT ONE:
+            noForcedInnerParagraph: true,
+
+        });
+
+        converter.setFlavor('github');
+        const wrapper = document.createElement("div");
+        html = converter.makeHtml(markdown);
+
+        html = html.replace(/"/g, "");
+        wrapper.innerHTML = html
+        stripEmptyTextNodes(wrapper);
+
+        elements.tutorialContent.innerHTML = wrapper.innerHTML;
     }
+
 
 }
 
@@ -1265,6 +1304,8 @@ function closeModal(type) {
         elements.codeModal.classList.remove('active');
     } else if (type === 'faq') {
         elements.faqModal.classList.remove('active');
+    } else if (type === 'tutorial') {
+        elements.tutorialModal.classList.remove('active');
     }
 }
 

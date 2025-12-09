@@ -788,6 +788,9 @@ body {
 }
 
 .modal-body {
+    margin: var(--spacing);
+    margin-left: 40px;
+    margin-right: 40px;
     padding: var(--spacing);
 }
 
@@ -1334,4 +1337,10 @@ blockquote p:first-child {
     transform: translateY(0.5px);
     /* micro-adjust for Safari’s 0.5px optical shift */
     pointer-events: none;
+}
+
+.tutorialContent {
+    margin: 20;
+    padding: 20;
+    box-sizing: border-box;
 }
