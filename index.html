@@ -155,8 +155,6 @@
 
             </section>
 
-
-
             <!-- Assets Grid -->
             <section class="card" id="assetsSection" style="display: none;">
                 <div class="card-header">
@@ -167,8 +165,24 @@
                     <div id="assetsGrid" class="assets-grid"></div>
                 </div>
             </section>
+
+            <!-- Selected Media section -->
+            <section class="card" id="mediaSection" style="display: none;">
+                <div class="card-header">
+                    <h2>Selected Media</h2>
+                </div>
+                <div class="card-body">
+                    <div class="media-wrapper" style="max-width: 50%;">
+                        <audio id="audioPlayer" controls style="display: none;"></audio>
+                        <video id="mediaPlayer" controls style="display: none;"></video>
+                        <!-- WaveSurfer container for asset player -->
+                        <div id="wave" style="width: 100%;"></div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Model Section -->
-            <section class="card" id="modelSelectionSection">
+            <section class="card" id="modelSelectionSection" style="display: none;">
                 <div class="card-header">
                     <h2>Task Builder</h2>
                     <div class="player-controls">
@@ -191,21 +205,6 @@
                             <ul id="taskList" class="task-list">
                                 <p style="text-align: center;">Drag and drop model here.</p>
                             </ul>
-                            <p>
-                                Include Residual
-                                <input type="checkbox" id="inputResidual" name="residual" value="residual" checked>
-                            <div class="formats-container">
-                                <p>Output Format:</p>
-                                <label><input type="checkbox" name="format" value="wav"> .wav</label>
-                                <label><input type="checkbox" name="format" value="mp3" checked> .mp3</label>
-                                <label><input type="checkbox" name="format" value="mov"> .mov</label>
-                                <label><input type="checkbox" name="format" value="mp4"> .mp4</label>
-                            </div>
-                            </p>
-                            <div class="language-container">
-                                <p>Optional Language:</p>
-                                <input id="languageInput" type="text" placeholder="en">
-                            </div>
                         </div>
 
                         <!-- </div> -->
@@ -215,12 +214,14 @@
                             <pre id="modelPreviewOutput"></pre>
                         </div>
                     </div>
+
+
                     <div class="tools-left">
                         <div id="stem-controls" class="stem-mixer-header" style="display: none;">
                             <div style="display: flex; flex-direction: column; text-align: center;">
-                                <button id="playAllBtn" class="btn-primary" hidden style="margin-bottom: 10px;">Play
+                                <button id="playAllBtn" class="btn-primary" style="margin-bottom: 10px;">Play
                                     All</button>
-                                <button id="refreshStemsBtn" class="btn-primary" hidden style="margin-bottom: 10px;">
+                                <button id="refreshStemsBtn" class="btn-primary" style="margin-bottom: 10px;">
                                     Refresh Stems</button>
                             </div>
                         </div>
@@ -232,8 +233,10 @@
                     </div>
 
                 </div>
-
             </section>
+
+
+
             <!-- Media Player -->
             <section class="card" id="playerSection" style="display: none;">
                 <div class="card-header">
@@ -242,16 +245,11 @@
                         <button id="createAlignmentBtn" class="btn-primary">Create Task</button>
                     </div>
                 </div>
+
                 <div class="card-body">
                     <div class="player-container">
-                        <div class="media-wrapper">
-                            <video id="mediaPlayer" controls></video>
-                            <audio id="audioPlayer" controls></audio>
-                            <!-- WaveSurfer container for asset player -->
-                            <div id="wave" style="width: 100%;"></div>
-                        </div>
-                        <div class="media-wrapper">
 
+                        <div class="media-wrapper-2">
                             <div class="tools-left" id="alignmentTools">
                                 <button id="downloadAlignmentButton" class="btn-secondary">Download Alignment
                                 </button>
@@ -366,11 +364,12 @@
 
 
     <script src="api.js"></script>
-    <script src="code.js"></script>
+
     <script src="app.js"></script>
     <script src="modelSelector.js"></script>
     <script src="stemplayer.js"></script>
     <script src="easter-egg.js"></script>
+    <script src="code.js"></script>
 
 </body>
 

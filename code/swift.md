@@ -50,14 +50,7 @@ actor AudioShakeClient {
     }
     
     private func createTask(videoURL: String) async throws -> String {
-        let body: [String: Any] = [
-            "url": videoURL,
-            "targets": [[
-                "model": "alignment",
-                "formats": ["json"],
-                "language": "en"
-            ]]
-        ]
+        let body: [String: Any] = ${payload}
         
         var request = URLRequest(url: URL(string: "\\(baseURL)/tasks")!)
         request.httpMethod = "POST"

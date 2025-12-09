@@ -14,9 +14,9 @@ The source [**audio or video**](https://developer.audioshake.ai/supported-format
 <summary><strong>How to use this demo</strong></summary>
 <span>
 * Create or select an asset  
-* Choose an alignment or create a new one  
-* Play media with synced lyrics/transcription  
-* Optionally edit words and download the updated JSON
+* Tap Create Separation Task to create a new task
+* Play media with synced stems 
+* Optionally download the stems
 </span>
 </details>
 <details>
@@ -28,11 +28,12 @@ The source [**audio or video**](https://developer.audioshake.ai/supported-format
 </span>
 </details>
 <details>
-<summary><strong>How to create an alignment</strong></summary>
+<summary><strong>How to create a stem separation task</strong></summary>
 <span>
 * Select an asset  
-* Create an alignment or select alignment from the list. 
-* Edit if needed and download the JSON
+* Tap Create Separation Task to create a new task
+* Play media with synced stems 
+* Optionally download the stems
 </span>
 </details>
 <details>
@@ -42,7 +43,7 @@ The source [**audio or video**](https://developer.audioshake.ai/supported-format
 **View Code** shows JS, Node, Curl, Python, and Swift examples with your API key auto-injected.
 
 **Console** provides:  
-1. **List** — list all alignments  
+1. **List** — list all tasks  
 2. **Get Task** — fetch by Task ID  
 3. **Create Task** — Uses currently selected asset to create a new task.
 </span>

@@ -2,72 +2,30 @@
 // MODEL JSON
 // ---------------------------
 const modelData = [
-    {
-        "name": "Instrumental",
-        "model": "instrumental",
-        "description": "Generates an instrumental-only version by removing vocals. For best quality, use the high_quality variant.",
-        "variant": "high_quality"
-    },
-    {
-        "name": "Drums",
-        "model": "drums",
-        "description": "Isolates percussion and rhythmic elements."
-    },
-    {
-        "name": "Vocals",
-        "model": "vocals",
-        "description": "Extracts vocal elements from a mix. Supports the high_quality variant for improved clarity.",
-        "variant": "high_quality"
-    },
-    {
-        "name": "Bass",
-        "model": "bass",
-        "description": "Separates bass instruments and low-frequency sounds."
-    },
-    {
-        "name": "Guitar",
-        "model": "guitar",
-        "description": "Isolates guitar stems (acoustic, electric, classical)."
-    },
-    {
-        "name": "Piano",
-        "model": "piano",
-        "description": "Extracts piano or keyboard instruments."
-    },
-    {
-        "name": "Strings",
-        "model": "strings",
-        "description": "Isolates orchestral string instruments like violin, cello, and viola."
-    },
-    {
-        "name": "Wind",
-        "model": "wind",
-        "description": "Extracts wind instruments such as flute and saxophone."
-    },
-    {
-        "name": "Other",
-        "model": "other",
-        "description": "Captures remaining instrumentation after main stems are removed."
-    },
-    {
-        "name": "Other-x-Guitar",
-        "model": "other-x-guitar",
-        "description": "Residual instrumentation after removing vocals, drums, bass, and guitar."
-    }
+    { "name": "Instrumental", "model": "instrumental", "variant": "high_quality" },
+    { "name": "Drums", "model": "drums" },
+    { "name": "Vocals", "model": "vocals", "variant": "high_quality" },
+    { "name": "Bass", "model": "bass" },
+    { "name": "Guitar", "model": "guitar" },
+    { "name": "Piano", "model": "piano" },
+    { "name": "Strings", "model": "strings" },
+    { "name": "Wind", "model": "wind" },
+    { "name": "Other", "model": "other" },
+    { "name": "Other-x-Guitar", "model": "other-x-guitar" }
 ];
-
 
 const availableList = document.getElementById("availableList");
 const taskList = document.getElementById("taskList");
 const debugEl = document.getElementById("modelPreviewOutput");
-
 const maxModels = 10;
 
+
 // ---------------------------
-// RENDER LEFT LIST
+// RENDER AVAILABLE LIST
 // ---------------------------
 modelData.forEach(stem => {
     const li = createItem(stem.model, stem.name);
+    li.dataset.originalName = stem.name;
     li.draggable = true;
     availableList.appendChild(li);
 });
@@ -80,12 +38,74 @@ function createItem(model, label) {
     return li;
 }
 
+
 // ---------------------------
-// DRAG EVENTS (LEFT → RIGHT)
+// BUILD A MODEL CARD (v3.2)
+// ---------------------------
+function buildModelCard(li, model) {
+    li.replaceChildren(); // wipe everything in a safe, atomic way
+
+    // ----- HEADER -----
+    const header = document.createElement("div");
+    header.className = "model-header";
+
+    const title = document.createElement("span");
+    title.className = "model-title";
+    title.textContent = li.dataset.originalName || model;
+
+    const remove = document.createElement("span");
+    remove.className = "remove-btn";
+    remove.innerHTML = `
+    <svg width="12" height="12" viewBox="0 0 12 12">
+        <path d="M3 3 L9 9 M9 3 L3 9" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+`;
+
+    remove.addEventListener("click", () => {
+        taskList.removeChild(li);
+
+        // Restore to available list
+        const restored = createItem(model, li.dataset.originalName || model);
+        restored.draggable = true;
+        availableList.appendChild(restored);
+
+        refreshAvailableListState();
+        updateTaskPayload();
+    });
+
+    header.append(title, remove);
+
+    // ----- OPTIONS -----
+    const options = document.createElement("div");
+    options.className = "model-options";
+
+    options.innerHTML = `
+        <div class="format-row">
+            <label><input type="checkbox" class="fmt" value="wav"> wav</label>
+            <label><input type="checkbox" class="fmt" value="mp3" checked> mp3</label>
+            <label><input type="checkbox" class="fmt" value="mov"> mov</label>
+            <label><input type="checkbox" class="fmt" value="mp4"> mp4</label>
+        </div>
+
+        <div class="residual-row">
+            <label><input type="checkbox" class="residual-toggle"> residual</label>
+        </div>
+    `;
+
+    // ANY option change → update payload
+    options.querySelectorAll("input").forEach(input => {
+        input.addEventListener("change", updateTaskPayload);
+    });
+
+    // Final assembly
+    li.append(header, options);
+}
+
+
+// ---------------------------
+// DRAGGING LOGIC
 // ---------------------------
 let draggedItem = null;
-
-
 
 document.addEventListener("dragstart", (e) => {
     if (e.target.classList.contains("item")) {
@@ -99,146 +119,130 @@ document.addEventListener("dragend", () => {
     draggedItem = null;
 });
 
-// Allow dropping on taskList
 taskList.addEventListener("dragover", (e) => {
     e.preventDefault();
-    const afterElement = getDragAfterElement(taskList, e.clientY);
+    const after = getDragAfterElement(taskList, e.clientY);
     const dragging = document.querySelector(".dragging");
 
     if (!dragging) return;
 
     if (dragging.parentElement === taskList) {
-        // Reordering inside right panel
-        if (afterElement == null) {
-            taskList.appendChild(dragging);
-        } else {
-            taskList.insertBefore(dragging, afterElement);
-        }
+        if (!after) taskList.appendChild(dragging);
+        else taskList.insertBefore(dragging, after);
     }
 });
 
-taskList.addEventListener("drop", (e) => {
+taskList.addEventListener("drop", () => {
     if (!draggedItem) return;
 
     const model = draggedItem.dataset.model;
 
-    // Already in list?
-    if ([...taskList.children].some(li => li.dataset.model === model)) {
-        updateTaskPayload();
-        return;
-    }
+    if ([...taskList.children].some(li => li.dataset.model === model)) return;
 
-    // Enforce max models
     if (taskList.children.length >= maxModels) {
-        updateTaskPayload();
+        showToast("Max 10 models allowed");
         return;
     }
 
-    // Create new item for the task list
-    const li = createItem(model, draggedItem.textContent);
+    const li = draggedItem;
+    buildModelCard(li, model);
 
-    // Add remove button
-    const remove = document.createElement("span");
-    remove.className = "remove-btn";
-    remove.textContent = "✕";
-    remove.addEventListener("click", () => {
-        taskList.removeChild(li);
-        updateTaskPayload();
-    });
-
-    li.appendChild(remove);
     li.draggable = true;
     taskList.appendChild(li);
 
+    // Remove placeholder <p> if present
+    const placeholder = taskList.querySelector("p");
+    if (placeholder) placeholder.remove();
+
+    refreshAvailableListState();
     updateTaskPayload();
 });
 
+
 // ---------------------------
-// UTIL — Find element position for reordering
+// REORDER HELPER
 // ---------------------------
 function getDragAfterElement(container, y) {
     const items = [...container.querySelectorAll(".item:not(.dragging)")];
 
     return items.reduce((closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - (box.top + box.height / 2);
+        const rect = child.getBoundingClientRect();
+        const offset = y - (rect.top + rect.height / 2);
 
         if (offset < 0 && offset > closest.offset) {
-            return { offset: offset, element: child };
-        } else {
-            return closest;
+            return { offset, element: child };
         }
+
+        return closest;
     }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
 
+
 // ---------------------------
-// OUTPUT — selected models
+// DISABLE SELECTED MODELS IN LEFT LIST
+// ---------------------------
+function refreshAvailableListState() {
+    const selected = [...taskList.children].filter(li => li.tagName === "LI").map(li => li.dataset.model);
+
+    [...availableList.children].forEach(li => {
+        if (selected.includes(li.dataset.model)) {
+            li.classList.add("disabled");
+            li.draggable = false;
+        } else {
+            li.classList.remove("disabled");
+            li.draggable = true;
+        }
+    });
+}
+
+
+// ---------------------------
+// UPDATE PAYLOAD (v3.2 SAFE VERSION)
 // ---------------------------
 function updateTaskPayload() {
-    debugEl.textContent = '';
+    debugEl.textContent = "";
+
     if (!state.selectedAsset) {
-        showToast('Please select an asset first');
-        debugEl.textContent = 'Please select an asset first';
+        debugEl.textContent = "Please select an asset first";
         return;
     }
-    const url = (state.selectedAsset) ? state.selectedAsset.src : "Please select an asset "
-    const models = [...taskList.children].map(li => li.dataset.model);
-    const formats = [...document.querySelectorAll('input[name="format"]:checked')].map(f => f.value);
 
-    let variant = undefined;
-    // let residual = true;
+    const url = state.selectedAsset.src;
 
-    const language = (document.getElementById("languageInput").value != "" || document.getElementById("languageInput").length > 2) ? document.getElementById("languageInput").value : "en"
+    const targets = [...taskList.children]
+        .filter(li => li.tagName === "LI") // Ignore placeholder <p>
+        .map(li => {
+            const model = li.dataset.model;
+            const optionsContainer = li.querySelector(".model-options");
 
-    if (language.length > 2) {
-        debugEl.textContent = "Language code is 2 characters max!"
-        showToast("Language code is 2 characters")
-        return
-    }
+            if (!optionsContainer) return null;
 
-    const isResidual = document.getElementById("inputResidual").checked;
+            const formats = [...optionsContainer.querySelectorAll(".fmt:checked")]
+                .map(f => f.value);
 
-    const targets = [...taskList.children].map((target) => {
+            if (formats.length === 0) {
+                showToast(`${model} requires at least one format`);
+                throw new Error(`${model} must select at least one format`);
+            }
 
-        let model = target.dataset.model
+            const residual = optionsContainer.querySelector(".residual-toggle")?.checked;
 
-        let obj = {
-            model: model,
-            formats: formats,
-            language: language
-        };
+            const obj = { model, formats };
 
+            if (model === "instrumental" || model === "vocals") {
+                obj.variant = "high_quality";
+            }
 
-        if (model == "instrumental" || model == "vocals") {
-            variant = "high_quality"
-            obj.variant = variant
-        }
+            if (residual) obj.residual = true;
 
-        if (isResidual) {
-            obj.residual = true
-        }
+            return obj;
+        })
+        .filter(Boolean); // Remove nulls
 
-        return (obj != undefined) ? obj : undefined
-    });
-
-    // remove first ele <p> message
-    targets.shift()
-
-    let task = {
-        url: url,
-        targets: targets
-    }
-
-    // update the Payload state
-
+    const task = { url, targets };
     state.taskPayload = task;
 
-    debugEl.textContent = JSON.stringify(
-        task,
-        null,
-        2
-    );
-
+    debugEl.textContent = JSON.stringify(task, null, 2);
 }
 
 // UI Helper function for alterting the user how much time they have to download the stems
@@ -293,5 +297,3 @@ function getTaskExpiryInfo(completedTask) {
         expiryMessage
     };
 }
-
-// updateTaskPayload();

@@ -1129,3 +1129,209 @@ blockquote p:first-child {
     display: flex;
     background-color: #10b981;
 }
+
+/* Model Options */
+
+.item {
+    background: #5c6bf0;
+    color: white;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: grab;
+}
+
+.model-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.remove-btn {
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.remove-btn:hover {
+    opacity: 1;
+}
+
+/* -------------------------------
+   MODEL CARD HEADER
+--------------------------------*/
+.model-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* ----------------------------------
+   SELECTED MODEL CARD (v3.3.1)
+---------------------------------- */
+#taskList .item {
+    background: #4b59e3;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    cursor: grab;
+}
+
+#taskList .item:active {
+    cursor: grabbing;
+}
+
+/* ----------------------------------
+   AVAILABLE MODELS BUTTONS
+---------------------------------- */
+#availableList .item {
+    background: #5468ff;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    color: white;
+    text-align: left;
+    cursor: grab;
+}
+
+/* ----------------------------------
+   MODEL HEADER
+---------------------------------- */
+
+.model-header {
+    display: flex;
+    align-items: center;
+    /* Ensures perfect vertical alignment */
+    gap: 12px;
+    /* Clean separation between title + close */
+}
+
+/* Title expands, but does NOT force space-between warping */
+.model-title {
+    flex-grow: 1;
+    font-size: 16px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* ----------------------------------
+   CLOSE BUTTON 
+---------------------------------- */
+.remove-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 24px;
+    height: 24px;
+
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.28);
+
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+/* Important: Removes tiny SVG misalignment Safari introduces */
+.remove-btn svg {
+    display: block;
+    pointer-events: none;
+}
+
+.remove-btn:hover {
+    background: rgba(255, 255, 255, 0.40);
+    transform: scale(1.10);
+}
+
+.remove-btn:active {
+    transform: scale(0.92);
+}
+
+/* ----------------------------------
+   OPTIONS CONTAINER
+---------------------------------- */
+.model-options {
+    background: rgba(255, 255, 255, 0.20);
+    padding: 14px;
+    border-radius: 8px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    font-size: 14px;
+}
+
+/* ----------------------------------
+   FORMAT ROWS
+---------------------------------- */
+.format-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+}
+
+.format-row label {
+    white-space: nowrap;
+}
+
+/* ----------------------------------
+   RESIDUAL ROW
+---------------------------------- */
+.residual-row {
+    display: flex;
+    align-items: center;
+}
+
+/* ----------------------------------
+   DISABLED STATE
+---------------------------------- */
+.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+
+/* --- FIX SAFARI OFF-CENTER SVG IN REMOVE BUTTON --- */
+
+.remove-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 26px;
+    /* slightly larger hit target */
+    height: 26px;
+
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.28);
+    cursor: pointer;
+
+    /* ← critical for Safari */
+    line-height: 0;
+    padding: 0;
+}
+
+.remove-btn svg {
+    width: 12px;
+    height: 12px;
+    display: block;
+    /* removes inline centering quirks */
+    transform: translateY(0.5px);
+    /* micro-adjust for Safari’s 0.5px optical shift */
+    pointer-events: none;
+}
