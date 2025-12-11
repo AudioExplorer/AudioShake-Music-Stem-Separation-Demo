@@ -31,8 +31,6 @@ async function loadSwiftCodeMD(mdfile, YOUR_API_KEY) {
     // replace all ${api_key} and ${asset_url}
     let injectedMD = markdown
         .replace(/\$\{api_key\}/g, YOUR_API_KEY)
-        // .replace(/\$\{asset_url\}/g, sourceURL)
-        // replace ${payload} with swift dictionary
         .replace(/\$\{payload\}/g, transformPayload(payloadObj));
 
     return injectedMD;
@@ -82,9 +80,6 @@ async function taskPayload() {
 
 async function updateCodeExample(lang) {
     let YOUR_API_KEY = (api.hasAPIKey) ? api.apiKey : "YOUR_API_KEY";
-    let sourceURL = (state.selectedAsset != undefined) ? state.selectedAsset.src : 'https://example.com/audio.mp3'
-
-    // cleaned up unused local payload logic
 
     const examples = {
         swift: await loadSwiftCodeMD("./code/swift.md", YOUR_API_KEY),
@@ -92,7 +87,7 @@ async function updateCodeExample(lang) {
         javascript: await loadCodeMD("./code/javascript.md", YOUR_API_KEY),
         node: await loadCodeMD("./code/node.md", YOUR_API_KEY),
         curl: await loadCodeMD("./code/curl.md", YOUR_API_KEY),
-        python: await loadCodeMD("./code/python.md", YOUR_API_KEY),
+        python: await loadCodeMD("./code/python.md", YOUR_API_KEY)
     };
 
     elements.codeContent.textContent = examples[lang] || examples.javascript;
