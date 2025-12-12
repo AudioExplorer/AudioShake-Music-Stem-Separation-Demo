@@ -4,11 +4,11 @@ package-lock.json
 package.json
 alignment-wordless.json
 demo-assets-config.json
-demo-assets.json
+
 dev-plan-vanila.md
 progress.md
 Claude.md
 server.mjs
-# code-summary.md
+
 ./assets/*
 stemplayerv2.js

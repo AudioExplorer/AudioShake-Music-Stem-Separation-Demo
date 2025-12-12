@@ -539,6 +539,10 @@ function renderAssets() {
             <div class="asset-title" title="${asset.title}">${asset.title}</div>
         `;
 
+        if (asset.artist) {
+            card.innerHTML += `<div class="asset-artist" title="${asset.artist}">${asset.artist}</div>`;
+        }
+
         card.addEventListener('click', () => selectAsset(index));
         elements.assetsGrid.appendChild(card);
     });
@@ -704,18 +708,38 @@ function renderWithDemoData() {
     loadStems(completedTask)
 }
 
+// Task Builder
+
+
 
 async function createSeparationTask() {
+
+    // update task payload 
+    updateTaskPayload();
+    //Validate task payload and API key
+
     if (!api.hasAPIKey()) {
         await openModal('auth');
         return;
     }
-    //console.log(state.taskPayload)
 
     if (!state.taskPayload) {
         showToast('Please use task builder to create a task payload first');
         return;
     }
+
+    if (!state.taskPayload.url) {
+        showToast("URL must be specified");
+        return;
+    }
+
+    state.taskPayload.targets.forEach(model => {
+        if (model.formats.length === 0) {
+            showToast(`${model.model} requires at least one format`);
+            return;
+        }
+    });
+
 
     try {
         showToast('Creating Separation task...');

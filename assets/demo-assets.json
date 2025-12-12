@@ -1,0 +1,45 @@
+{
+  "assets": [
+    {
+      "src": "https://demos.audioshake.ai/demo-assets/Audiio_Drakeford_The_Venture_Stronger_Than_One.wav",
+      "title": "Stronger Than One",
+      "artist": "Drakeford",
+      "format": "audio/wav",
+      "expiry": null
+    },
+    {
+      "src": "https://demos.audioshake.ai/demo-assets/Audiio_Kidpenny_Single_bettertogether-AltVersion.wav",
+      "title": "Better Together (Alt Version)",
+      "artist": "Kidpenny",
+      "format": "audio/wav",
+      "expiry": null
+    },
+    {
+      "src": "https://demos.audioshake.ai/demo-assets/Audiio_Neu-Song_GET-THROUGH-IT.wav",
+      "title": "Get Through It",
+      "artist": "Neu Song",
+      "format": "audio/wav",
+      "expiry": null
+    },
+    {
+      "src": "https://demos.audioshake.ai/demo-assets/Audiio_Nikl_Single_GetReady.wav",
+      "title": "Get Ready",
+      "artist": "Nikl",
+      "format": "audio/wav",
+      "expiry": null
+    },
+    {
+      "src": "https://demos.audioshake.ai/demo-assets/Wordless.wav",
+      "title": "Wordless",
+      "artist": "Havi Blaze",
+      "format": "audio/wav",
+      "expiry": null
+    },
+    {
+      "src": "https://demos.audioshake.ai/demo-assets/shakeitup.mp3",
+      "title": "shakeitup.mp3",
+      "format": "audio/mpeg",
+      "expiry": null
+    }
+  ]
+}

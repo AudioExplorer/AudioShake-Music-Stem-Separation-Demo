@@ -12,12 +12,16 @@ let randomDemoAssets = []
 
 const wavesurfer = WaveSurfer.create({
     container: '#waveform',
-    waveColor: '#00F5A0',
-    progressColor: '#00D9F5',
+    waveColor: '#0A0F2C',
+    progressColor: '#C100F0',
+    // progressColor: '#00F5A0',
+    barWidth: 3,
     url: srcURL,
+    height: 60,
 })
 
 wavesurfer.on('interaction', () => {
+    wavesurfer.setVolume(0.2);
     wavesurfer.play()
 })
 
@@ -31,21 +35,10 @@ async function updateEasterEgg() {
     let randomAsset = randomDemoAssets[Math.floor(Math.random() * randomDemoAssets.length)];
     console.log("randomAsset.", randomAsset)
 
-    const titleOverlay = document.createElement('div');
-    titleOverlay.textContent = randomAsset.title;
-    titleOverlay.style.cssText = `
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    color: white;
-    font-size: 1.2em;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 5px 10px;
-    border-radius: 5px;
-    z-index: 10;
-`;
-    document.getElementById('waveform').appendChild(titleOverlay);
     wavesurfer.load(randomAsset.src)
+
+    // document.getElementById("trackTitle").innerHTML = randomAsset.title
+
 
 }
 
