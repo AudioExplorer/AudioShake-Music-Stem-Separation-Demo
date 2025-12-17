@@ -15,7 +15,7 @@ refreshStemsBtn.addEventListener('click', refreshStems);
 
 async function refreshStems() {
     showToast("Refresing Stems")
-    const taskId = completedTask.id
+    const taskId = state.completedTask.id
     if (taskId) {
         result = await api.getTask(taskId);
         addDebugEntry(result, 'success');
@@ -24,14 +24,22 @@ async function refreshStems() {
     }
 }
 
+
+async function resetStems() {
+    // hide the UI for the stems
+    document.getElementById("stem-controls").style.display = 'none';
+    document.getElementById("stemsPlaceholder").style.display = 'none';
+
+    // goto the task builder model selection section
+    goToSection('modelSelectionSection');
+
+}
+
 async function loadStems(completedTask) {
 
     // reveal the UI for the stems
-    // reveal the UI for the stems
     document.getElementById("stem-controls").style.display = 'flex';
-
-
-
+    document.getElementById("stemsPlaceholder").style.display = 'flex';
     // Clean up any existing WaveSurfer instances
     stemPlayers.forEach(item => {
         if (item.wavesurfer) {

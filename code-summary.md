@@ -56,7 +56,7 @@ A complex module mimicking a Digital Audio Workstation (DAW).
 3. **User Action**: Clicks "Create Task".
 4. **Network (`api.js`)**: Calls `POST /tasks`. Returns a generic Task Object.
 5. **Polling (`api.js`)**: `pollTask` begins checking the ID every 4s.
-6. **Completion**: When status is `completed`, `loadStems(task)` is called.
+6. **Completion**: When status is `completed`, we call stemplayer.js  `loadStems(task)` function.
 7. **Rendering (`stemplayer.js`)**: Iterates through `task.targets[0].output`, creating a UI row and `<audio>` element for every stem found.
 
 ### Scenario B: Alignment & Lyrics

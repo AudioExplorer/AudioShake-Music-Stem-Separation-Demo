@@ -1,6 +1,5 @@
-// V17
 // Application State
-// navigation to section
+// scroll navigation to sections 
 const appSections = ["assetsSection", "mediaSection", "modelSelectionSection", "stemsPlaceholder"]
 
 
@@ -78,7 +77,9 @@ const elements = {
     // tasks
     createSeparationTaskBtn: document.getElementById('createSeparationTaskBtn'),
     modelSelectionSection: document.getElementById('modelSelectionSection'),
+
     // Alignments
+    // Alignments (Not currently used in this demo)
     alignmentsSection: document.getElementById('alignmentsSection'),
     alignmentsHeader: document.getElementById('alignmentsHeader'),
     alignmentsBody: document.getElementById('alignmentsBody'),
@@ -88,7 +89,7 @@ const elements = {
     skipInput: document.getElementById('skipInput'),
     takeInput: document.getElementById('takeInput'),
 
-    // alignment tools
+    // alignment tools (Not currently used in this demo)
     alignmentTools: document.getElementById('alignmentTools'),
     downloadAlignmentButton: document.getElementById('downloadAlignmentButton'),
 
@@ -176,6 +177,7 @@ function setupEventListeners() {
     elements.clearDebug.addEventListener('click', clearDebugOutput);
     elements.addAssetBtn.addEventListener('click', loadNewAssetFromSource);
 
+
     // API Methods
     document.querySelectorAll('.method-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -195,7 +197,7 @@ function setupEventListeners() {
     // Asset Loader
     elements.uploadArea.addEventListener('click', () => elements.fileInput.click());
     elements.fileInput.addEventListener('change', handleFileUpload);
-    // elements.loadUrlBtn.addEventListener('click', handleURLLoad);
+
     elements.loadDemoBtn.addEventListener('click', loadDemoAssets);
 
     // Drag and Drop
@@ -393,17 +395,31 @@ async function executeAPIMethod(method) {
         let result;
         switch (method) {
             case 'createTask':
+
+                //validate asset exists
                 if (!state.selectedAsset) {
                     showToast('Please select an asset first');
                     return;
                 }
 
+                //validate task payload exists
                 if (!state.taskPayload) {
                     showToast('Please use task builder to create a task payload first');
                     return;
                 }
 
+                //need at least one target
+                if (state.taskPayload.targets.length < 1) {
+                    showToast('Please add at least one target to the task payload');
+                    return;
+                }
 
+                state.taskPayload.targets.forEach(model => {
+                    if (model.formats.length === 0) {
+                        showToast(`${model.model} requires at least one format`);
+                        return;
+                    }
+                });
 
                 result = await api.createSepTask(state.taskPayload);
 
@@ -583,7 +599,16 @@ function selectAsset(index) {
     elements.mediaSection.style.display = 'block';
     goToSection("mediaSection");
 
-    clearAlignments()
+    // clear any existing alignments (depricated)
+    // clearAlignments()
+
+    // clear any existing stems
+    resetStems();
+
+    // clear any existing taskpayloads + reset task builder selecctions and clear task builder output -- modelSelector.js
+    clearTaskPayloads()
+
+    // update the selected asset
     state.selectedAsset = state.assets[index];
 
     // update the selected asset title
@@ -726,41 +751,70 @@ function renderWithDemoData() {
 
     console.log(completedTask.targets.length)
     state.completedTask = completedTask;
+    // call stemplayer.js's loadStems function
     loadStems(completedTask)
 }
 
-// Task Builder
 
+async function validateTask() {
 
+    // validation return true if valid, show toast and return false if not valid
+    // steps has api key (X)
+    // has task payload
+    // has selected asset
+    // has at least one target
+    // has at least one format
 
-async function createSeparationTask() {
-
-    // update task payload 
-    updateTaskPayload();
-    //Validate task payload and API key
-
+    // validate api key
     if (!api.hasAPIKey()) {
+        showToast('Please enter an API key first');
         await openModal('auth');
-        return;
+        return false;
     }
 
+    // validate task payload
     if (!state.taskPayload) {
         showToast('Please use task builder to create a task payload first');
-        return;
+        return false;
     }
 
-    if (!state.taskPayload.url) {
-        showToast("URL must be specified");
-        return;
+    // validate selected asset
+    if (!state.selectedAsset) {
+        showToast('Please select an asset first');
+        return false;
     }
 
-    state.taskPayload.targets.forEach(model => {
-        if (model.formats.length === 0) {
-            showToast(`${model.model} requires at least one format`);
-            return;
-        }
-    });
+    // validate at least one target
+    if (state.taskPayload.targets.length === 0) {
+        showToast('Please add at least one target to the task payload');
+        return false;
+    }
 
+    // validate at least one format
+    if (state.taskPayload.targets.some(target => target.formats.length === 0)) {
+
+        // find the target that is missing formats
+        const missingFormatTarget = state.taskPayload.targets.find(target => target.formats.length === 0);
+        showToast(`Please add at least one format to the ${missingFormatTarget.model} target`);
+        return false;
+    }
+
+    return true;
+
+}
+// Task Builder
+// create separation task builder
+async function createSeparationTask() {
+
+    //Reset stems
+    resetStems();
+    // update task payload to current state
+    updateTaskPayload();
+
+    //Validate task payload and API key
+    if (!await validateTask()) {
+        return;
+    }
 
     try {
         showToast('Creating Separation task...');
@@ -768,12 +822,20 @@ async function createSeparationTask() {
         addDebugEntry(task, 'success');
 
         showToast('Processing... This may take a few minutes');
+
+        // display message in modelPreviewOutput debugEl in modelSelector.js
+        // const debugEl = document.getElementById("modelPreviewOutput");
+        debugEl.textContent = `The task may take a few minutes to complete. The results will then be available in the "Stems" section appearing below.`;
+
+        // show loading modal
+        await openModal('loading');
         const completedTask = await api.pollTask(task.id, (update) => {
             addDebugEntry(update, 'info');
         });
 
         showToast('Separation completed!');
         goToSection("stemsPlaceholder");
+        // call stemplayer.js's loadStems function
         loadStems(completedTask);
 
     } catch (err) {
@@ -801,6 +863,11 @@ async function createAlignment() {
         addDebugEntry(task, 'success');
 
         showToast('Processing... This may take a few minutes');
+
+        // display message in modelPreviewOutput
+        // const debugEl = document.getElementById("modelPreviewOutput");
+        debugEl.textContent = `The task may take a few minutes to complete. The results will then be available in the "Stems" section appearing below.`;
+
         const completedTask = await api.pollTask(task.id, (update) => {
             addDebugEntry(update, 'info');
         });

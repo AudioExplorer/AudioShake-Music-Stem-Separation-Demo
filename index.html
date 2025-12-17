@@ -68,6 +68,9 @@
             <section class="card">
                 <div class="card-header">
                     <div class="tools-left">
+                        <div class="or-divider-vertical">
+                            <span>Demo Tools:</span>
+                        </div>
                         <button id="consoleToggle" class="btn-secondary">
                             API Console
                         </button>
@@ -81,6 +84,12 @@
                         <button id="tutorialBtn" class="btn-secondary">
                             Tutorial
                         </button>
+                        <!-- push content right like a spacer-->
+                        <div class="or-divider-vertical" style="flex-grow: 3; margin: 50px 0px">
+                        </div>
+                        <div class="or-divider-vertical">
+                            <span>AudioShake Links:</span>
+                        </div>
                         <button id="caseStudyBtn" class="btn-secondary">
                             AudioShake Case Studies
                         </button>
@@ -219,10 +228,8 @@
 
                         <div class="output-container">
                             <h3>Task Payload Preview</h3>
-                            <pre id="modelPreviewOutput">Prepare the task payload by dragging the desired models into the selected models list and configuring the models.
-                            
-                            Once configured, click the "Create Separation Task" button to create the task.  
-                            </pre>
+                            <textarea id="modelPreviewOutput" class="code-editor-textarea" spellcheck="false">
+                            </textarea>
                         </div>
                     </div>
 
@@ -341,7 +348,8 @@
             </div>
             <div class="modal-body">
                 <p>Enter your AudioShake API key. Get your key at <a href="https://dashboard.audioshake.ai"
-                        target="_blank">dashboard.audioshake.ai</a></p>
+                        target="_blank">dashboard.audioshake.ai</a> <br>Note: This demo allows you to run your own
+                    audio files through the AudioShake API. All tasks created through this demo will incur a cost.</p>
                 <input type="password" id="apiKeyInput" placeholder="Your API Key" class="input">
                 <div class="api-status" id="apiStatus"></div>
             </div>
@@ -387,7 +395,6 @@
 
 
     <script src="api.js"></script>
-
     <script src="app.js"></script>
     <script src="modelSelector.js"></script>
     <script src="stemplayer.js"></script>

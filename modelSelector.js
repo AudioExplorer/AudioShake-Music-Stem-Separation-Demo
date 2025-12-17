@@ -1,22 +1,39 @@
 // ---------------------------
 // MODEL JSON
+// https://developer.audioshake.ai/models
 // ---------------------------
+
+// TODO: Add more models
+/**
+ * 
+ * 
+ ialogue	dialogue	Isolates speech or vocals from any other sound	1.5	3 Hours
+Effects	effects	Removes dialogue and music but retains the ambience, sound effects, and environmental noise	1.5	3 Hours
+Music removal	music_removal	Removes music from audio while retaining dialogue, background effects, and natural sound	N/A	1 Hour
+Background (Music & FX)	music_fx	Removes dialogue to extracting a clean background stem of music and effects	1.5	3 Hours
+Music detection	music_detection	Detects the portions of an audio file that contain music	0.5	3 Hours
+Multi-Voice	multi_voice	Separates dialogue from multiple speakers in audio recordings, delivering individual audio files per speaker. Available in two_speaker and n_speaker variants, detailed below.	N/A	1 Hour
+
+ */
 const modelData = [
-    { "name": "Instrumental", "model": "instrumental", "variant": "high_quality" },
-    { "name": "Drums", "model": "drums" },
-    { "name": "Vocals", "model": "vocals", "variant": "high_quality" },
-    { "name": "Bass", "model": "bass" },
-    { "name": "Guitar", "model": "guitar" },
-    { "name": "Piano", "model": "piano" },
-    { "name": "Strings", "model": "strings" },
-    { "name": "Wind", "model": "wind" },
-    { "name": "Other", "model": "other" },
-    { "name": "Other-x-Guitar", "model": "other-x-guitar" }
+    { "name": "Instrumental", "model": "instrumental", "variant": "high_quality", category: "Music" },
+    { "name": "Drums", "model": "drums", category: "Music" },
+    { "name": "Vocals", "model": "vocals", "variant": "high_quality", category: "Music" },
+    { "name": "Bass", "model": "bass", category: "Music" },
+    { "name": "Guitar", "model": "guitar", category: "Music" },
+    { "name": "Piano", "model": "piano", category: "Music" },
+    { "name": "Strings", "model": "strings", category: "Music" },
+    { "name": "Wind", "model": "wind", category: "Music" },
+    { "name": "Other", "model": "other", category: "Music" },
+    { "name": "Other-x-Guitar", "model": "other-x-guitar", category: "Music" },
 ];
 
 const availableList = document.getElementById("availableList");
 const taskList = document.getElementById("taskList");
 const debugEl = document.getElementById("modelPreviewOutput");
+
+
+
 const maxModels = 10;
 
 
@@ -195,11 +212,37 @@ function refreshAvailableListState() {
     });
 }
 
+// ---------------------------
+// ---------------------------
+// CLEAR TASK PAYLOADS
+// ---------------------------
+
+// clear any existing taskpayloads 
+// ui reset available list
+// ui reset task builder selections
+// ui reset task builder output
+
+function clearTaskPayloads() {
+    console.log("clearing task payloads");
+
+
+    // click the remove-btn on each li in the task list
+    [...taskList.children].forEach(li => {
+        const removeBtn = li.querySelector(".remove-btn");
+        if (removeBtn) removeBtn.click();
+    });
+    refreshAvailableListState();
+    state.taskPayload = null;
+    updateTaskPayload();
+    debugEl.textContent = `Prepare the task payload by dragging the desired models into the selected models list and configuring the models. Once configured, click the "Create Separation Task" button to create and run the task. The task will run asynchronously and the results will then be available in the "Stems" section appearing below.`
+}
+
 
 // ---------------------------
 // UPDATE PAYLOAD (v3.2 SAFE VERSION)
 // ---------------------------
 function updateTaskPayload() {
+    //reset debug
     debugEl.textContent = "";
 
     if (!state.selectedAsset) {
@@ -220,10 +263,6 @@ function updateTaskPayload() {
             const formats = [...optionsContainer.querySelectorAll(".fmt:checked")]
                 .map(f => f.value);
 
-            if (formats.length === 0) {
-                showToast(`${model} requires at least one format`);
-                throw new Error(`${model} must select at least one format`);
-            }
 
             const residual = optionsContainer.querySelector(".residual-toggle")?.checked;
 
