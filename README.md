@@ -68,9 +68,12 @@ Body: {
   "url": "https://example.com/audio.mp3",
   "targets": [
     {
-      "model": "alignment",
-      "formats": ["json"],
-      "language": "en"
+      "model": "instrumental",
+      "formats": ["mp3", "wav"],
+    },
+    {
+      "model": "vocal",
+      "formats": ["wav"],
     }
   ]
 }
@@ -103,25 +106,29 @@ Each target has:
 - Drag-and-drop file upload
 - URL loading for remote assets
 - Built-in demo assets
-- Format detection (audio/video/JSON)
+
+### Task Builder
+- Select a model and configure targets
+- Select optional residual
+
 
 ### Media Player
-- Video and audio playback support
+- Stem player with sync audio playback support
+- Waveform display
 - Click-to-seek functionality
 - Automatic stems sync
 - Download individual stems
 
 ### API Console
 - Real-time request/response logging
-- Color-coded debug output
+- Useful for debugging
 - Quick method execution
 - Task status monitoring
 
 ### Code Viewer
 - Multi-language examples
-- Syntax highlighting
 - One-click copy to clipboard
-- Context-aware samples
+- Context-aware samples driven by task builder
 
 ## Browser Compatibility
 
