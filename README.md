@@ -2,7 +2,7 @@
 
 A modern, browser-based application for testing the AudioShake Tasks API. Create source separations from a single mixed track.
 
-[Live Demo](https://audioexplorer.github.io/AudioShake-Music-Stem-Separation-Demo/)
+[Live Demo](https://audioshake-developer.github.io/AudioShake-Music-Stem-Separation-Demo/)
 
 ## Features
 
@@ -180,7 +180,7 @@ No build process required. Simply edit files and refresh your browser.
 
 
 ## Resources
-- [Live Demo](https://audioexplorer.github.io/AudioShake-Music-Stem-Separation-Demo/)
+- [Live Demo](https://audioshake-developer.github.io/AudioShake-Music-Stem-Separation-Demo/)
 - [AudioShake API Documentation](https://docs.audioshake.ai)
 - [Create Demo Assets Tool](https://www.npmjs.com/package/create-demo-assets)
 - [AudioShake Dashboard](https://dashboard.audioshake.ai)
